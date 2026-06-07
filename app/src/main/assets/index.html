@@ -1,14 +1,14 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="缂栫▼鍔╂暀">
+<meta name="apple-mobile-web-app-title" content="编程助教">
 <meta name="theme-color" content="#1a1a2e">
 <link rel="manifest" href="./manifest.json">
-<title>馃惗 璞嗚眴缂栫▼鍔╂暀</title>
+<title>🐶 豆豆编程助教</title>
 <style>
   :root {
     --bg: #1a1a2e;
@@ -51,7 +51,7 @@
   .header h1 { font-size: 18px; color: #fff; line-height: 1.2; }
   .header .sub { font-size: 11px; color: var(--text2); }
 
-  /* 涓诲唴瀹?*/
+  /* 主内容 */
   .main {
     max-width: 800px; margin: 0 auto;
     padding: 12px;
@@ -60,7 +60,7 @@
   .panel { display: none; }
   .panel.active { display: block; }
 
-  /* 鍗＄墖 */
+  /* 卡片 */
   .card {
     background: var(--surface);
     border-radius: var(--radius);
@@ -72,7 +72,7 @@
     color: var(--accent2); display: flex; align-items: center; gap: 6px;
   }
 
-  /* 杈撳叆妗?*/
+  /* 输入框 */
   textarea {
     width: 100%; background: #0d1117; color: #c9d1d9;
     border: 1px solid #30363d; border-radius: 8px;
@@ -88,7 +88,7 @@
     margin-bottom: 6px; font-weight: 600; font-size: 14px;
   }
 
-  /* 鎸夐挳 */
+  /* 按钮 */
   .btn {
     padding: 10px 16px; border: none; border-radius: 8px;
     font-size: 14px; cursor: pointer; font-weight: 600;
@@ -104,7 +104,7 @@
   .btn-block { width: 100%; justify-content: center; }
   .btn-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
 
-  /* 杈撳嚭鍖哄煙 */
+  /* 输出区域 */
   .output {
     background: #0d1117; border: 1px solid #30363d;
     border-radius: 8px; padding: 14px; min-height: 120px;
@@ -119,7 +119,7 @@
     line-height: 1.5; overflow-x: auto; white-space: pre-wrap;
   }
 
-  /* 璇硶楂樹寒棰滆壊 */
+  /* 语法高亮颜色 */
   .hl-kw { color: #ff7b72; }
   .hl-fn { color: #d2a8ff; }
   .hl-str { color: #a5d6ff; }
@@ -135,7 +135,7 @@
   .output .line-num { color: #6e7681; margin-right: 6px; user-select: none; font-size: 12px; }
   .output .explain { color: #7ee787; }
 
-  /* 閿欒鍗＄墖 */
+  /* 错误卡片 */
   .error-card {
     background: #2d1518; border: 1px solid #5a1e1e;
     border-radius: 8px; padding: 12px; margin: 6px 0;
@@ -144,7 +144,7 @@
   .error-card .err-msg { color: #ff9999; margin-top: 2px; font-size: 13px; }
   .error-card .err-fix { color: var(--green); margin-top: 4px; font-size: 13px; }
 
-  /* 妯℃澘缃戞牸 */
+  /* 模板网格 */
   .template-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
@@ -161,7 +161,7 @@
   .tpl-card .tpl-name { font-weight: 600; color: #fff; font-size: 13px; }
   .tpl-card .tpl-desc { font-size: 11px; color: var(--text2); margin-top: 2px; }
 
-  /* 搴曢儴瀵艰埅鏍?*/
+  /* 底部导航栏 */
   .bottom-nav {
     position: fixed; bottom: 0; left: 0; right: 0;
     background: var(--surface);
@@ -183,7 +183,7 @@
   .nav-item.active { color: var(--accent2); }
   .nav-item:active { background: rgba(0,210,255,0.08); }
 
-  /* 鍔犺浇 */
+  /* 加载 */
   .spinner {
     display: inline-block; width: 16px; height: 16px;
     border: 2px solid var(--text2); border-top-color: var(--accent2);
@@ -194,7 +194,7 @@
 
   .status { font-size: 12px; color: var(--text2); margin-top: 6px; display: flex; align-items: center; gap: 6px; }
 
-  /* API 閰嶇疆 */
+  /* API 配置 */
   .api-config { display: none; margin-top: 10px; }
   .api-config.show { display: block; }
   .api-config input {
@@ -202,7 +202,7 @@
     border-radius: 6px; color: #c9d1d9; font-size: 13px; margin: 4px 0;
   }
 
-  /* 骞虫澘閫傞厤 */
+  /* 平板适配 */
   @media (min-width: 768px) {
     body { font-size: 16px; }
     .main { padding: 20px; }
@@ -216,13 +216,13 @@
     textarea { min-height: 200px; font-size: 15px; }
   }
 
-  /* 妯睆骞虫澘 */
+  /* 横屏平板 */
   @media (min-width: 1024px) {
     .main { max-width: 1100px; }
     .template-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
   }
 
-  /* 娆㈣繋鎻愮ず */
+  /* 欢迎提示 */
   .welcome {
     text-align: center; padding: 40px 20px;
     color: var(--text2);
@@ -241,141 +241,142 @@
 <body>
 
 <div class="header">
-  <span class="logo">馃惗</span>
+  <span class="logo">🐶</span>
   <div>
-    <h1>璞嗚眴缂栫▼鍔╂暀</h1>
-    <div class="sub">ESP32 / Arduino 璇惧爞宸ュ叿</div>
+    <h1>豆豆编程助教</h1>
+    <div class="sub">ESP32 / Arduino 课堂工具</div>
   </div>
 </div>
 
 <div class="main">
 
-<!-- ============ 浠ｇ爜瑙ｈ ============ -->
+<!-- ============ 代码解读 ============ -->
 <div id="panel-explain" class="panel active">
   <div class="card">
-    <div class="input-label"><span>馃摜 绮樿创浠ｇ爜</span></div>
-    <textarea id="explain-input" placeholder="绮樿创瀛︾敓浠ｇ爜...&#10;&#10;void setup() {&#10;  pinMode(2, OUTPUT);&#10;}&#10;void loop() {&#10;  digitalWrite(2, HIGH);&#10;  delay(1000);&#10;  digitalWrite(2, LOW);&#10;  delay(1000);&#10;}"></textarea>
+    <div class="input-label"><span>📥 粘贴代码</span></div>
+    <textarea id="explain-input" placeholder="粘贴学生代码...&#10;&#10;void setup() {&#10;  pinMode(2, OUTPUT);&#10;}&#10;void loop() {&#10;  digitalWrite(2, HIGH);&#10;  delay(1000);&#10;  digitalWrite(2, LOW);&#10;  delay(1000);&#10;}"></textarea>
     <div class="btn-group">
-      <button class="btn btn-primary btn-block" onclick="explainCode()">馃攳 瑙ｈ浠ｇ爜</button>
-      <button class="btn btn-secondary btn-block" onclick="explainWithAI()">馃挰 姹傚姪璞嗚眴瑙ｈ</button>
+      <button class="btn btn-primary btn-block" onclick="explainCode()">🔍 解读代码</button>
+      <button class="btn btn-secondary btn-block" onclick="explainWithAI()">💬 求助豆豆解读</button>
     </div>
   </div>
   <div class="card">
-    <h3>馃摛 瑙ｈ缁撴灉</h3>
+    <h3>📤 解读结果</h3>
     <div id="explain-output" class="output">
       <div class="welcome">
-        <div class="icon">馃摉</div>
-        <p>绮樿创 Arduino / ESP32 浠ｇ爜<br>鐐瑰嚮"瑙ｈ浠ｇ爜"鏌ョ湅閫愯鍒嗘瀽</p>
+        <div class="icon">📖</div>
+        <p>粘贴 Arduino / ESP32 代码<br>点击"解读代码"查看逐行分析</p>
       </div>
     </div>
     <div id="explain-status" class="status"></div>
   </div>
 </div>
 
-<!-- ============ 閿欒鍒嗘瀽 ============ -->
+<!-- ============ 错误分析 ============ -->
 <div id="panel-debug" class="panel">
   <div class="card">
-    <div class="input-label"><span>馃摜 浠ｇ爜</span></div>
-    <textarea id="debug-code" placeholder="绮樿创鏈夐棶棰樼殑浠ｇ爜..."></textarea>
+    <div class="input-label"><span>📥 代码</span></div>
+    <textarea id="debug-code" placeholder="粘贴有问题的代码..."></textarea>
   </div>
   <div class="card">
-    <div class="input-label"><span>馃摜 閿欒淇℃伅锛堝彲閫夛級</span></div>
-    <textarea id="debug-error" placeholder="绮樿创缂栬瘧鍣ㄦ姤閿?..&#10;error: expected ';' before '}'" style="min-height:80px;"></textarea>
+    <div class="input-label"><span>📥 错误信息（可选）</span></div>
+    <textarea id="debug-error" placeholder="粘贴编译器报错...&#10;error: expected ';' before '}'" style="min-height:80px;"></textarea>
   </div>
   <div class="btn-group">
-    <button class="btn btn-primary btn-block" onclick="analyzeErrors()">馃攳 鍒嗘瀽閿欒</button>
-    <button class="btn btn-secondary btn-block" onclick="analyzeWithAI()">馃挰 姹傚姪璞嗚眴鍒嗘瀽</button>
+    <button class="btn btn-primary btn-block" onclick="analyzeErrors()">🔍 分析错误</button>
+    <button class="btn btn-secondary btn-block" onclick="analyzeWithAI()">💬 求助豆豆分析</button>
   </div>
   <div class="card" style="margin-top:12px;">
-    <h3>馃摛 鍒嗘瀽缁撴灉</h3>
+    <h3>📤 分析结果</h3>
     <div id="debug-output" class="output">
       <div class="welcome">
-        <div class="icon">馃攳</div>
-        <p>绮樿创浠ｇ爜鍜岄敊璇俊鎭?br>鐐瑰嚮"鍒嗘瀽閿欒"鑷姩妫€娴嬮棶棰?/p>
+        <div class="icon">🔍</div>
+        <p>粘贴代码和错误信息<br>点击"分析错误"自动检测问题</p>
       </div>
     </div>
     <div id="debug-status" class="status"></div>
   </div>
 </div>
 
-<!-- ============ 鎬濊矾缂栫▼ ============ -->
+<!-- ============ 思路编程 ============ -->
 <div id="panel-generate" class="panel">
   <div class="card">
-    <div class="input-label"><span>馃挰 鎯冲仛浠€涔堬紵</span></div>
-    <textarea id="generate-idea" placeholder="鐢ㄦ棩甯歌瑷€鎻忚堪...&#10;&#10;渚嬪锛?#10;鈥?璁㎜ED姣忛殧1绉掗棯鐑?#10;鈥?鎸変笅鎸夐挳LED浜紝鏉惧紑鐏?#10;鈥?瓒呭０娉㈡祴璺濇樉绀哄湪涓插彛"></textarea>
+    <div class="input-label"><span>💬 想做什么？</span></div>
+    <textarea id="generate-idea" placeholder="用日常语言描述...&#10;&#10;例如：&#10;• 让LED每隔1秒闪烁&#10;• 按下按钮LED亮，松开灭&#10;• 超声波测距显示在串口"></textarea>
     <div class="btn-group">
-      <button class="btn btn-primary btn-block" onclick="generateCode()">馃挕 鐢熸垚浠ｇ爜</button>
-      <button class="btn btn-secondary btn-block" onclick="generateWithAI()">馃挰 姹傚姪璞嗚眴鐢熸垚</button>
+      <button class="btn btn-primary btn-block" onclick="generateCode()">💡 生成代码</button>
+      <button class="btn btn-secondary btn-block" onclick="generateWithAI()">💬 求助豆豆生成</button>
     </div>
   </div>
   <div class="card">
-    <h3>馃搵 甯哥敤妯℃澘锛堢偣涓€涓嬪～鍏咃級</h3>
+    <h3>📋 常用模板（点一下填充）</h3>
     <div class="template-grid" id="template-grid"></div>
   </div>
   <div class="card">
-    <h3>馃摛 鐢熸垚鐨勪唬鐮?/h3>
+    <h3>📤 生成的代码</h3>
     <div id="generate-output" style="min-height:120px;">
       <div class="welcome">
-        <div class="icon">馃挕</div>
-        <p>鎻忚堪鎯冲仛鐨勪簨鎯?br>鎴栫偣鍑讳笂鏂规ā鏉?/p>
+        <div class="icon">💡</div>
+        <p>描述想做的事情<br>或点击上方模板</p>
       </div>
     </div>
     <div id="generate-status" class="status"></div>
     <div class="btn-group" id="generate-actions" style="display:none;">
-      <button class="btn btn-primary btn-sm" onclick="copyGeneratedCode()">馃搵 澶嶅埗</button>
-      <button class="btn btn-secondary btn-sm" onclick="explainGeneratedCode()">馃攳 瑙ｈ</button>
+      <button class="btn btn-primary btn-sm" onclick="copyGeneratedCode()">📋 复制</button>
+      <button class="btn btn-secondary btn-sm" onclick="explainGeneratedCode()">🔍 解读</button>
     </div>
   </div>
 </div>
 
-<!-- ============ 閫熸煡鎵嬪唽 ============ -->
+<!-- ============ 速查手册 ============ -->
 <div id="panel-learn" class="panel">
   <div class="card">
-    <h3>馃摎 Arduino / ESP32 鍑芥暟閫熸煡</h3>
+    <h3>📚 Arduino / ESP32 函数速查</h3>
     <div id="quickref-content"></div>
   </div>
 </div>
 
-<!-- API 閰嶇疆 -->
+<!-- API 配置 -->
 <div class="card" style="margin-top:8px;">
-  <button class="btn btn-secondary btn-sm btn-block" onclick="toggleAPIConfig()">鈿欙笍 AI澧炲己璁剧疆</button>
+  <button class="btn btn-secondary btn-sm btn-block" onclick="toggleAPIConfig()">⚙️ AI增强设置</button>
   <div class="api-config" id="api-config">
     <p style="color:var(--text2); font-size:12px; margin:8px 0;">
-      宸查缃?DeepSeek API锛屽紑绠卞嵆鐢ㄣ€備篃鍙洿鎹㈠叾浠栧吋瀹规帴鍙ｃ€?    </p>
-    <label style="font-size:12px; color:var(--text2);">API 鍦板潃</label>
+      已预置 DeepSeek API，开箱即用。也可更换其他兼容接口。
+    </p>
+    <label style="font-size:12px; color:var(--text2);">API 地址</label>
     <input type="text" id="api-url">
     <label style="font-size:12px; color:var(--text2);">API Key</label>
     <input type="password" id="api-key">
-    <label style="font-size:12px; color:var(--text2);">妯″瀷鍚?/label>
+    <label style="font-size:12px; color:var(--text2);">模型名</label>
     <input type="text" id="api-model">
-    <button class="btn btn-primary btn-sm btn-block" onclick="saveAPIConfig()" style="margin-top:8px;">馃捑 淇濆瓨</button>
+    <button class="btn btn-primary btn-sm btn-block" onclick="saveAPIConfig()" style="margin-top:8px;">💾 保存</button>
   </div>
 </div>
 
 </div>
 
-<!-- 搴曢儴瀵艰埅鏍?-->
+<!-- 底部导航栏 -->
 <nav class="bottom-nav">
   <button class="nav-item active" onclick="switchTab('explain')">
-    <span class="nav-icon">馃摉</span> 浠ｇ爜瑙ｈ
+    <span class="nav-icon">📖</span> 代码解读
   </button>
   <button class="nav-item" onclick="switchTab('debug')">
-    <span class="nav-icon">馃攳</span> 閿欒鍒嗘瀽
+    <span class="nav-icon">🔍</span> 错误分析
   </button>
   <button class="nav-item" onclick="switchTab('generate')">
-    <span class="nav-icon">馃挕</span> 鎬濊矾缂栫▼
+    <span class="nav-icon">💡</span> 思路编程
   </button>
   <button class="nav-item" onclick="switchTab('learn')">
-    <span class="nav-icon">馃摎</span> 閫熸煡
+    <span class="nav-icon">📚</span> 速查
   </button>
 </nav>
 
 <script>
-// ==================== 搴曢儴瀵艰埅 ====================
+// ==================== 底部导航 ====================
 function switchTab(name) {
   document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  // 鎵惧埌瀵瑰簲 nav-item
+  // 找到对应 nav-item
   const items = document.querySelectorAll('.nav-item');
   const panels = ['explain', 'debug', 'generate', 'learn'];
   const idx = panels.indexOf(name);
@@ -385,110 +386,113 @@ function switchTab(name) {
   window.scrollTo(0, 0);
 }
 
-// 褰撳墠鐢熸垚鐨勪唬鐮佺紦瀛?let currentGeneratedCode = '';
+// 当前生成的代码缓存
+let currentGeneratedCode = '';
 
-// ==================== Arduino 鐭ヨ瘑搴?====================
+// ==================== Arduino 知识库 ====================
 const ARDUINO_DOC = {
-  'pinMode': { desc: '璁剧疆寮曡剼妯″紡', params: '寮曡剼鍙? 妯″紡(INPUT/OUTPUT/INPUT_PULLUP)', detail: '浣跨敤鏁板瓧寮曡剼鍓嶅繀椤诲厛璁剧疆妯″紡銆傚氨鍍忓憡璇変竴鎵囬棬鏄浜鸿繘鏉ヨ繕鏄嚭鍘汇€?, example: 'pinMode(13, OUTPUT);' },
-  'digitalWrite': { desc: '鏁板瓧寮曡剼鍐欓珮/浣庣數骞?, params: '寮曡剼鍙? HIGH/LOW', detail: '缁欏紩鑴氳緭鍑洪珮鐢靛钩(寮€)鎴栦綆鐢靛钩(鍏?銆侶IGH=寮€鐏紝LOW=鍏崇伅銆?, example: 'digitalWrite(13, HIGH);' },
-  'digitalRead': { desc: '璇诲彇鏁板瓧寮曡剼鐢靛钩', params: '寮曡剼鍙?, detail: '璇诲彇寮曡剼鐘舵€侊紝杩斿洖 HIGH 鎴?LOW銆傚氨鍍忛棶闂ㄩ搩锛氭湁浜烘寜浜嗗悧锛?, example: 'int v = digitalRead(3);' },
-  'analogWrite': { desc: '妯℃嫙杈撳嚭(PWM)', params: '寮曡剼鍙? 鍊?0-255)', detail: '杈撳嚭妯℃嫙淇″彿銆?=鍏ㄥ叧锛?55=鍏ㄥ紑銆傗殸锔?ESP32璇风敤 ledcWrite锛?, example: 'analogWrite(9, 128);', note: '鈿狅笍 ESP32鐢╨edcWrite' },
-  'analogRead': { desc: '妯℃嫙璇诲彇(ADC)', params: '寮曡剼鍙?, detail: '璇诲彇妯℃嫙浼犳劅鍣ㄧ數鍘嬪€笺€侫rduino杩斿洖0-1023锛孍SP32杩斿洖0-4095銆?, example: 'int v = analogRead(A0);' },
-  'delay': { desc: '寤舵椂绛夊緟', params: '姣鏁?, detail: '鏆傚仠绋嬪簭鎸囧畾姣锛?000姣=1绉掞級銆備細闃诲绋嬪簭锛岃繘闃剁敤millis()銆?, example: 'delay(1000);' },
-  'Serial.begin': { desc: '鍒濆鍖栦覆鍙?, params: '娉㈢壒鐜?9600/115200)', detail: '鍚姩涓插彛閫氫俊銆傛尝鐗圭巼鏄璇濋€熷害锛屼袱杈硅涓€鑷淬€?, example: 'Serial.begin(115200);' },
-  'Serial.println': { desc: '涓插彛鎵撳嵃鎹㈣', params: '鍐呭', detail: '鎶婃暟鎹彂鍒扮數鑴戜覆鍙ｇ洃瑙嗗櫒銆傚氨鍍忕粰鐢佃剳鍙戞秷鎭€?, example: 'Serial.println("Hello!");' },
-  'Serial.print': { desc: '涓插彛鎵撳嵃涓嶆崲琛?, params: '鍐呭', detail: '绫讳技println浣嗕笉鎹㈣锛屽悗闈㈢殑鍐呭鎺ュ湪鍚庨潰銆?, example: 'Serial.print("X:");' },
-  'millis': { desc: '鑾峰彇杩愯鏃堕棿(姣)', params: '鏃?, detail: '杩斿洖绋嬪簭鍚姩鍒扮幇鍦ㄧ殑姣鏁般€傚父鐢ㄤ簬闈為樆濉炲畾鏃躲€?, example: 'unsigned long t = millis();' },
-  'tone': { desc: '铚傞福鍣ㄥ彂澹?, params: '寮曡剼, 棰戠巼(Hz), 鏃堕暱(ms)', detail: '璁╄渹楦ｅ櫒鍙戝嚭鎸囧畾棰戠巼澹伴煶銆傞鐜囪秺楂橀煶璋冭秺楂樸€?, example: 'tone(8, 440, 500);' },
-  'map': { desc: '鏁板€兼槧灏?, params: '杈撳叆, 杈撳叆鏈€灏? 杈撳叆鏈€澶? 杈撳嚭鏈€灏? 杈撳嚭鏈€澶?, detail: '鎸夋瘮渚嬫槧灏勬暟鍊艰寖鍥淬€傚鎶?-1023鏄犲皠鍒?-180搴︺€?, example: 'int a = map(v, 0, 1023, 0, 180);' },
-  'constrain': { desc: '鏁板€肩害鏉?, params: '鍊? 鏈€灏? 鏈€澶?, detail: '纭繚鏁板€间笉瓒呭嚭鑼冨洿銆傚お灏忓彇鏈€灏忓€硷紝澶ぇ鍙栨渶澶у€笺€?, example: 'int s = constrain(v, 0, 255);' },
-  'ledcSetup': { desc: 'ESP32 PWM閰嶇疆', params: '閫氶亾, 棰戠巼, 鍒嗚鲸鐜?, detail: 'ESP32璁剧疆PWM銆傚厛閰嶇疆鍐嶇粦寮曡剼鍐嶈緭鍑恒€?, example: 'ledcSetup(0,5000,8);', note: '浠匛SP32' },
-  'ledcWrite': { desc: 'ESP32 PWM杈撳嚭', params: '閫氶亾, 鍊?0-255)', detail: 'ESP32鐨凱WM杈撳嚭锛屼唬鏇緼rduino鐨刟nalogWrite銆?, example: 'ledcWrite(0, 200);', note: '浠匛SP32' },
-  'WiFi.begin': { desc: '杩炴帴WiFi', params: 'SSID, 瀵嗙爜', detail: '璁〦SP32杩炴帴WiFi缃戠粶銆?, example: 'WiFi.begin("name","pwd");', note: '浠匛SP32' },
-  'random': { desc: '鐢熸垚闅忔満鏁?, params: '鏈€灏? 鏈€澶?, detail: '鐢熸垚闅忔満鏁般€傛渶灏忓€煎寘鍚紝鏈€澶у€间笉鍖呭惈銆?, example: 'int r = random(1,7);' },
-  'abs': { desc: '鍙栫粷瀵瑰€?, params: '鏁板€?, detail: '璐熸暟鍙樻鏁般€?, example: 'int d = abs(-5);' },
-  'sizeof': { desc: '鍙橀噺澶у皬(瀛楄妭)', params: '鍙橀噺/绫诲瀷', detail: '杩斿洖鍙橀噺鍗犵敤鐨勫瓧鑺傛暟銆?, example: 'int s = sizeof(int);' },
+  'pinMode': { desc: '设置引脚模式', params: '引脚号, 模式(INPUT/OUTPUT/INPUT_PULLUP)', detail: '使用数字引脚前必须先设置模式。就像告诉一扇门是让人进来还是出去。', example: 'pinMode(13, OUTPUT);' },
+  'digitalWrite': { desc: '数字引脚写高/低电平', params: '引脚号, HIGH/LOW', detail: '给引脚输出高电平(开)或低电平(关)。HIGH=开灯，LOW=关灯。', example: 'digitalWrite(13, HIGH);' },
+  'digitalRead': { desc: '读取数字引脚电平', params: '引脚号', detail: '读取引脚状态，返回 HIGH 或 LOW。就像问门铃：有人按了吗？', example: 'int v = digitalRead(3);' },
+  'analogWrite': { desc: '模拟输出(PWM)', params: '引脚号, 值(0-255)', detail: '输出模拟信号。0=全关，255=全开。⚠️ ESP32请用 ledcWrite！', example: 'analogWrite(9, 128);', note: '⚠️ ESP32用ledcWrite' },
+  'analogRead': { desc: '模拟读取(ADC)', params: '引脚号', detail: '读取模拟传感器电压值。Arduino返回0-1023，ESP32返回0-4095。', example: 'int v = analogRead(A0);' },
+  'delay': { desc: '延时等待', params: '毫秒数', detail: '暂停程序指定毫秒（1000毫秒=1秒）。会阻塞程序，进阶用millis()。', example: 'delay(1000);' },
+  'Serial.begin': { desc: '初始化串口', params: '波特率(9600/115200)', detail: '启动串口通信。波特率是说话速度，两边要一致。', example: 'Serial.begin(115200);' },
+  'Serial.println': { desc: '串口打印换行', params: '内容', detail: '把数据发到电脑串口监视器。就像给电脑发消息。', example: 'Serial.println("Hello!");' },
+  'Serial.print': { desc: '串口打印不换行', params: '内容', detail: '类似println但不换行，后面的内容接在后面。', example: 'Serial.print("X:");' },
+  'millis': { desc: '获取运行时间(毫秒)', params: '无', detail: '返回程序启动到现在的毫秒数。常用于非阻塞定时。', example: 'unsigned long t = millis();' },
+  'tone': { desc: '蜂鸣器发声', params: '引脚, 频率(Hz), 时长(ms)', detail: '让蜂鸣器发出指定频率声音。频率越高音调越高。', example: 'tone(8, 440, 500);' },
+  'map': { desc: '数值映射', params: '输入, 输入最小, 输入最大, 输出最小, 输出最大', detail: '按比例映射数值范围。如把0-1023映射到0-180度。', example: 'int a = map(v, 0, 1023, 0, 180);' },
+  'constrain': { desc: '数值约束', params: '值, 最小, 最大', detail: '确保数值不超出范围。太小取最小值，太大取最大值。', example: 'int s = constrain(v, 0, 255);' },
+  'ledcSetup': { desc: 'ESP32 PWM配置', params: '通道, 频率, 分辨率', detail: 'ESP32设置PWM。先配置再绑引脚再输出。', example: 'ledcSetup(0,5000,8);', note: '仅ESP32' },
+  'ledcWrite': { desc: 'ESP32 PWM输出', params: '通道, 值(0-255)', detail: 'ESP32的PWM输出，代替Arduino的analogWrite。', example: 'ledcWrite(0, 200);', note: '仅ESP32' },
+  'WiFi.begin': { desc: '连接WiFi', params: 'SSID, 密码', detail: '让ESP32连接WiFi网络。', example: 'WiFi.begin("name","pwd");', note: '仅ESP32' },
+  'random': { desc: '生成随机数', params: '最小, 最大', detail: '生成随机数。最小值包含，最大值不包含。', example: 'int r = random(1,7);' },
+  'abs': { desc: '取绝对值', params: '数值', detail: '负数变正数。', example: 'int d = abs(-5);' },
+  'sizeof': { desc: '变量大小(字节)', params: '变量/类型', detail: '返回变量占用的字节数。', example: 'int s = sizeof(int);' },
 };
 
 const ARDUINO_TYPES = {
-  'int': '鏁存暟锛?32768~32767',
-  'long': '闀挎暣鏁?,
-  'float': '灏忔暟锛堟诞鐐规暟锛?,
-  'char': '鍗曚釜瀛楃锛屽\'A\'',
-  'byte': '瀛楄妭锛?~255',
-  'bool': '甯冨皵鍊硷紝true/false',
-  'String': '瀛楃涓诧紙涓€娈垫枃瀛楋級',
-  'void': '绌虹被鍨嬶紙鍑芥暟涓嶈繑鍥炲€硷級',
-  'unsigned': '鏃犵鍙凤紙鍙瓨姝ｆ暟锛?,
+  'int': '整数，-32768~32767',
+  'long': '长整数',
+  'float': '小数（浮点数）',
+  'char': '单个字符，如\'A\'',
+  'byte': '字节，0~255',
+  'bool': '布尔值，true/false',
+  'String': '字符串（一段文字）',
+  'void': '空类型（函数不返回值）',
+  'unsigned': '无符号（只存正数）',
 };
 
 const ARDUINO_STRUCTURE = {
-  'void setup()': '鍒濆鍖栧嚱鏁?鈥?寮€鏈哄彧鎵ц涓€娆?,
-  'void loop()': '涓诲惊鐜?鈥?涓嶆柇閲嶅鎵ц',
-  'if': '鏉′欢鍒ゆ柇锛氬鏋滄垚绔嬪氨鎵ц',
-  'else': '鍚﹀垯锛歩f涓嶆垚绔嬫椂鎵ц',
-  'for': '寰幆锛氶噸澶嶆寚瀹氭鏁?,
-  'while': '寰幆锛氭潯浠舵垚绔嬪氨閲嶅',
+  'void setup()': '初始化函数 — 开机只执行一次',
+  'void loop()': '主循环 — 不断重复执行',
+  'if': '条件判断：如果成立就执行',
+  'else': '否则：if不成立时执行',
+  'for': '循环：重复指定次数',
+  'while': '循环：条件成立就重复',
 };
 
-// ==================== 浠ｇ爜瑙ｈ ====================
+// ==================== 代码解读 ====================
 function explainCode() {
   const code = document.getElementById('explain-input').value.trim();
   const output = document.getElementById('explain-output');
-  if (!code) { output.innerHTML = '<span class="warn">鈿狅笍 璇峰厛绮樿创浠ｇ爜</span>'; return; }
+  if (!code) { output.innerHTML = '<span class="warn">⚠️ 请先粘贴代码</span>'; return; }
 
   const lines = code.split('\n');
-  let html = `<div style="margin-bottom:8px;" class="success">馃摉 鍏?${lines.length} 琛岋紝閫愯瑙ｈ锛?/div>`;
+  let html = `<div style="margin-bottom:8px;" class="success">📖 共 ${lines.length} 行，逐行解读：</div>`;
 
   for (let i = 0; i < lines.length; i++) {
     const trimmed = lines[i].trim();
     if (!trimmed) { html += '<div style="height:6px;"></div>'; continue; }
 
-    // 娉ㄩ噴
+    // 注释
     if (trimmed.startsWith('//') || trimmed.startsWith('/*') || trimmed.startsWith('*')) {
-      html += `<div><span class="line-num">${i+1}</span><span class="hl-cmt">馃挰 ${escapeHtml(trimmed)}</span></div>`;
+      html += `<div><span class="line-num">${i+1}</span><span class="hl-cmt">💬 ${escapeHtml(trimmed)}</span></div>`;
       continue;
     }
 
-    // 棰勫鐞?    if (trimmed.startsWith('#')) {
+    // 预处理
+    if (trimmed.startsWith('#')) {
       html += `<div><span class="line-num">${i+1}</span><span class="hl-macro">${escapeHtml(trimmed)}</span></div>`;
       continue;
     }
 
     let found = '';
-    // 绫诲瀷
+    // 类型
     for (const [t, d] of Object.entries(ARDUINO_TYPES)) {
       if (trimmed.includes(t + ' ') || trimmed.startsWith(t + ' ')) {
         const m = trimmed.match(new RegExp(t + '\\s+(\\w+)'));
-        if (m) found = `<span class="explain">鈫?${t}鍙橀噺 <b>${m[1]}</b></span>`;
+        if (m) found = `<span class="explain">← ${t}变量 <b>${m[1]}</b></span>`;
       }
     }
-    // 缁撴瀯
+    // 结构
     for (const [k, d] of Object.entries(ARDUINO_STRUCTURE)) {
       if (trimmed.includes(k.replace('()','')) || trimmed.startsWith(k.split(' ')[0])) {
-        if (!found) found = `<span class="explain">鈫?${d}</span>`;
+        if (!found) found = `<span class="explain">← ${d}</span>`;
       }
     }
-    // 鍑芥暟
+    // 函数
     for (const [fn, doc] of Object.entries(ARDUINO_DOC)) {
-      if (trimmed.includes(fn + '(')) { found = `<span class="explain">鈫?${doc.desc}</span>`; break; }
+      if (trimmed.includes(fn + '(')) { found = `<span class="explain">← ${doc.desc}</span>`; break; }
     }
-    // 璧嬪€?    if (!found && trimmed.includes('=') && !trimmed.includes('==') && !trimmed.includes('!=')) {
+    // 赋值
+    if (!found && trimmed.includes('=') && !trimmed.includes('==') && !trimmed.includes('!=')) {
       const m = trimmed.match(/^(\w+)\s*=/);
-      if (m) found = `<span class="explain">鈫?缁?<b>${m[1]}</b> 璧嬪€?/span>`;
+      if (m) found = `<span class="explain">← 给 <b>${m[1]}</b> 赋值</span>`;
     }
 
     html += `<div><span class="line-num">${i+1}</span>${highlightLine(trimmed)}${found}</div>`;
   }
 
-  // 鏁翠綋璇勪及
+  // 整体评估
   const full = code.toLowerCase();
   html += '<div style="margin-top:12px;padding:12px;background:#1a2a1a;border-radius:8px;font-size:13px;">';
-  html += '<div class="success" style="margin-bottom:6px;">馃搳 鏁翠綋鍒嗘瀽锛?/div>';
-  html += full.includes('void setup') && full.includes('void loop') ? '<div>鉁?鏈?setup + loop</div>' : '<div class="warn">鈿狅笍 缂哄皯 setup 鎴?loop</div>';
-  html += full.includes('pinmode') ? '<div>鉁?鏈夊紩鑴氳缃?/div>' : '<div class="warn">鈿狅笍 鏈缃紩鑴氭ā寮?/div>';
-  html += full.includes('serial.begin') ? '<div>鉁?涓插彛宸插垵濮嬪寲</div>' : '';
-  html += full.includes('delay(') ? '<div>馃挕 鐢ㄤ簡delay() 鈥?娉ㄦ剰浼氶樆濉?/div>' : '';
+  html += '<div class="success" style="margin-bottom:6px;">📊 整体分析：</div>';
+  html += full.includes('void setup') && full.includes('void loop') ? '<div>✅ 有 setup + loop</div>' : '<div class="warn">⚠️ 缺少 setup 或 loop</div>';
+  html += full.includes('pinmode') ? '<div>✅ 有引脚设置</div>' : '<div class="warn">⚠️ 未设置引脚模式</div>';
+  html += full.includes('serial.begin') ? '<div>✅ 串口已初始化</div>' : '';
+  html += full.includes('delay(') ? '<div>💡 用了delay() — 注意会阻塞</div>' : '';
   html += '</div>';
   output.innerHTML = html;
 }
@@ -505,49 +509,49 @@ function highlightLine(line) {
 
 function escapeHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-// ==================== 閿欒鍒嗘瀽 ====================
+// ==================== 错误分析 ====================
 const ERROR_PATTERNS = [
-  { name:'缂哄皯鍒嗗彿', check:(c)=>{const r=[];c.split('\n').forEach((l,i)=>{const t=l.trim();if(t&&!/[;{}]$/.test(t)&&!/^(\/\/|#|\*|\/\*)/.test(t)&&/\w/.test(t)&&!t.includes('{')&&!t.includes('}'))r.push({line:i+1,msg:'鍙兘缂哄皯鍒嗗彿 <b>;</b>'});});return r;}, fix:'璇彞鏈熬鍔?<b>;</b>' },
-  { name:'鏈寮曡剼妯″紡', check:(c)=>{if((c.includes('digitalWrite')||c.includes('digitalRead'))&&!c.includes('pinMode'))return[{line:1,msg:'浣跨敤I/O浣嗘病<b>pinMode()</b>'}];return[];}, fix:'setup()閲屽姞 pinMode(寮曡剼, OUTPUT/INPUT);' },
-  { name:'缂哄皯setup/loop', check:(c)=>{const r=[];if(!c.includes('void setup'))r.push({line:1,msg:'缂哄皯<b>void setup()</b>'});if(!c.includes('void loop'))r.push({line:1,msg:'缂哄皯<b>void loop()</b>'});return r;}, fix:'Arduino绋嬪簭蹇呴』鏈塻etup()鍜宭oop()' },
-  { name:'鎷彿涓嶅尮閰?, check:(c)=>{let o=0;for(const ch of c){if(ch==='{')o++;if(ch==='}')o--;}if(o!==0)return[{line:1,msg:`澶ф嫭鍙蜂笉鍖归厤(澶?{o>0?o:Math.abs(o)}涓?{o>0?'{':'}'})`}];return[];}, fix:'纭繚姣忎釜{鏈夊搴攠' },
-  { name:'鍦嗘嫭鍙蜂笉鍖归厤', check:(c)=>{let o=0;for(const ch of c){if(ch==='(')o++;if(ch===')')o--;}if(o!==0)return[{line:1,msg:`鍦嗘嫭鍙蜂笉鍖归厤(澶?{o>0?o:Math.abs(o)}涓?{o>0?'(':')'})`}];return[];}, fix:'纭繚姣忎釜(鏈夊搴?' },
-  { name:'digitalWrite鍊奸敊璇?, check:(c)=>{const r=[];const re=/digitalWrite\s*\([^,]+,\s*(\d+)\s*\)/g;let m;while((m=re.exec(c))!==null){if(m[1]!=='0'&&m[1]!=='1')r.push({line:0,msg:`digitalWrite鍙傛暟搴斾负HIGH/LOW锛屼笉鏄?{m[1]}`});}return r;}, fix:'digitalWrite鍙敤HIGH(寮€)鎴朙OW(鍏?' },
-  { name:'ESP32鐢ㄩ敊PWM', check:(c)=>{if(c.includes('analogWrite')&&(c.includes('ledc')||c.includes('ESP32')||c.includes('esp32')))return[{line:0,msg:'鈿狅笍 ESP32涓嶆敮鎸乤nalogWrite锛岀敤ledcWrite'}];return[];}, fix:'鐢╨edcSetup+ledcAttachPin+ledcWrite' },
-  { name:'Serial鏈垵濮嬪寲', check:(c)=>{if((c.includes('Serial.print')||c.includes('Serial.println'))&&!c.includes('Serial.begin'))return[{line:0,msg:'鐢ㄤ簡涓插彛浣嗘病<b>Serial.begin()</b>'}];return[];}, fix:'setup()閲屽姞Serial.begin(115200);' },
-  { name:'if閲岀敤=涓嶆槸==', check:(c)=>{const r=[];c.split('\n').forEach((l,i)=>{if(l.includes('if')&&l.match(/if\s*\([^=]*=[^=]/)&&!l.includes('==')&&!l.includes('!=')&&!l.includes('<')&&!l.includes('>'))r.push({line:i+1,msg:'if閲岀敤浜?b>=</b>(璧嬪€?锛屽簲璇ユ槸<b>==</b>(姣旇緝)'});});return r;}, fix:'绛変簬姣旇緝鐢?=锛岃祴鍊肩敤=' },
-  { name:'缂哄皯搴撳紩鐢?, check:(c)=>{const r=[];const n={Servo:'#include <Servo.h>',LiquidCrystal:'#include <LiquidCrystal.h>',WiFi:'#include <WiFi.h>'};for(const[k,v]of Object.entries(n)){if(c.includes(k)&&!c.includes('#include'))r.push({line:0,msg:`鐢ㄤ簡<b>${k}</b>浣嗘病鍖呭惈搴擄細${v}`});}return r;}, fix:'浠ｇ爜寮€澶村姞#include <搴撳悕.h>' },
+  { name:'缺少分号', check:(c)=>{const r=[];c.split('\n').forEach((l,i)=>{const t=l.trim();if(t&&!/[;{}]$/.test(t)&&!/^(\/\/|#|\*|\/\*)/.test(t)&&/\w/.test(t)&&!t.includes('{')&&!t.includes('}'))r.push({line:i+1,msg:'可能缺少分号 <b>;</b>'});});return r;}, fix:'语句末尾加 <b>;</b>' },
+  { name:'未设引脚模式', check:(c)=>{if((c.includes('digitalWrite')||c.includes('digitalRead'))&&!c.includes('pinMode'))return[{line:1,msg:'使用I/O但没<b>pinMode()</b>'}];return[];}, fix:'setup()里加 pinMode(引脚, OUTPUT/INPUT);' },
+  { name:'缺少setup/loop', check:(c)=>{const r=[];if(!c.includes('void setup'))r.push({line:1,msg:'缺少<b>void setup()</b>'});if(!c.includes('void loop'))r.push({line:1,msg:'缺少<b>void loop()</b>'});return r;}, fix:'Arduino程序必须有setup()和loop()' },
+  { name:'括号不匹配', check:(c)=>{let o=0;for(const ch of c){if(ch==='{')o++;if(ch==='}')o--;}if(o!==0)return[{line:1,msg:`大括号不匹配(多${o>0?o:Math.abs(o)}个${o>0?'{':'}'})`}];return[];}, fix:'确保每个{有对应}' },
+  { name:'圆括号不匹配', check:(c)=>{let o=0;for(const ch of c){if(ch==='(')o++;if(ch===')')o--;}if(o!==0)return[{line:1,msg:`圆括号不匹配(多${o>0?o:Math.abs(o)}个${o>0?'(':')'})`}];return[];}, fix:'确保每个(有对应)' },
+  { name:'digitalWrite值错误', check:(c)=>{const r=[];const re=/digitalWrite\s*\([^,]+,\s*(\d+)\s*\)/g;let m;while((m=re.exec(c))!==null){if(m[1]!=='0'&&m[1]!=='1')r.push({line:0,msg:`digitalWrite参数应为HIGH/LOW，不是${m[1]}`});}return r;}, fix:'digitalWrite只用HIGH(开)或LOW(关)' },
+  { name:'ESP32用错PWM', check:(c)=>{if(c.includes('analogWrite')&&(c.includes('ledc')||c.includes('ESP32')||c.includes('esp32')))return[{line:0,msg:'⚠️ ESP32不支持analogWrite，用ledcWrite'}];return[];}, fix:'用ledcSetup+ledcAttachPin+ledcWrite' },
+  { name:'Serial未初始化', check:(c)=>{if((c.includes('Serial.print')||c.includes('Serial.println'))&&!c.includes('Serial.begin'))return[{line:0,msg:'用了串口但没<b>Serial.begin()</b>'}];return[];}, fix:'setup()里加Serial.begin(115200);' },
+  { name:'if里用=不是==', check:(c)=>{const r=[];c.split('\n').forEach((l,i)=>{if(l.includes('if')&&l.match(/if\s*\([^=]*=[^=]/)&&!l.includes('==')&&!l.includes('!=')&&!l.includes('<')&&!l.includes('>'))r.push({line:i+1,msg:'if里用了<b>=</b>(赋值)，应该是<b>==</b>(比较)'});});return r;}, fix:'等于比较用==，赋值用=' },
+  { name:'缺少库引用', check:(c)=>{const r=[];const n={Servo:'#include <Servo.h>',LiquidCrystal:'#include <LiquidCrystal.h>',WiFi:'#include <WiFi.h>'};for(const[k,v]of Object.entries(n)){if(c.includes(k)&&!c.includes('#include'))r.push({line:0,msg:`用了<b>${k}</b>但没包含库：${v}`});}return r;}, fix:'代码开头加#include <库名.h>' },
 ];
 
 function analyzeErrors() {
   const code = document.getElementById('debug-code').value.trim();
   const errText = document.getElementById('debug-error').value.trim();
   const output = document.getElementById('debug-output');
-  if (!code && !errText) { output.innerHTML = '<span class="warn">鈿狅笍 璇风矘璐翠唬鐮佹垨閿欒淇℃伅</span>'; return; }
+  if (!code && !errText) { output.innerHTML = '<span class="warn">⚠️ 请粘贴代码或错误信息</span>'; return; }
 
   let html = '';
   let total = 0;
 
   if (errText) {
-    html += '<div style="margin-bottom:8px;"><b>馃攳 缂栬瘧鍣ㄦ姤閿欙細</b></div>';
+    html += '<div style="margin-bottom:8px;"><b>🔍 编译器报错：</b></div>';
     for (const line of errText.split('\n')) {
       const t = line.trim(); if (!t) continue;
       const m = t.match(/(.+):(\d+):(\d+):\s*(error|warning):\s*(.+)/i);
       if (m) {
-        html += `<div class="error-card"><div class="err-type">鉂?绗?{m[2]}琛?/div><div class="err-msg">${escapeHtml(m[5])}</div>`;
-        if (m[5].includes('not declared')) { const v=m[5].match(/'(\w+)'/); html+=`<div class="err-fix">馃挕 <b>${v?.[1]||'鍙橀噺'}</b>鏈０鏄庯紝妫€鏌ユ嫾鍐欐垨鍔犵被鍨嬪０鏄?/div>`; }
-        else if (m[5].includes('expected')) { const e=m[5].match(/expected\s+'([^']+)'/); html+=`<div class="err-fix">馃挕 缂哄皯<b>${e?.[1]||''}</b>锛岃ˉ涓婂嵆鍙?/div>`; }
+        html += `<div class="error-card"><div class="err-type">❌ 第${m[2]}行</div><div class="err-msg">${escapeHtml(m[5])}</div>`;
+        if (m[5].includes('not declared')) { const v=m[5].match(/'(\w+)'/); html+=`<div class="err-fix">💡 <b>${v?.[1]||'变量'}</b>未声明，检查拼写或加类型声明</div>`; }
+        else if (m[5].includes('expected')) { const e=m[5].match(/expected\s+'([^']+)'/); html+=`<div class="err-fix">💡 缺少<b>${e?.[1]||''}</b>，补上即可</div>`; }
         html += '</div>'; total++;
       }
     }
   }
 
   if (code) {
-    html += '<div style="margin:8px 0;"><b>馃攳 瑙勫垯妫€娴嬶細</b></div>';
+    html += '<div style="margin:8px 0;"><b>🔍 规则检测：</b></div>';
     for (const rule of ERROR_PATTERNS) {
       try {
         for (const r of rule.check(code)) {
-          html += `<div class="error-card"><div class="err-type">鈿狅笍 ${rule.name}</div><div class="err-msg">${r.line>0?'绗?+r.line+'琛岋細':''}${r.msg}</div><div class="err-fix">馃挕 ${rule.fix}</div></div>`;
+          html += `<div class="error-card"><div class="err-type">⚠️ ${rule.name}</div><div class="err-msg">${r.line>0?'第'+r.line+'行：':''}${r.msg}</div><div class="err-fix">💡 ${rule.fix}</div></div>`;
           total++;
         }
       } catch(e) {}
@@ -555,18 +559,18 @@ function analyzeErrors() {
   }
 
   if (total === 0) {
-    html += '<div class="success" style="font-size:16px;text-align:center;padding:20px;">鉁?娌℃娴嬪埌鏄庢樉閿欒锛?/div>';
+    html += '<div class="success" style="font-size:16px;text-align:center;padding:20px;">✅ 没检测到明显错误！</div>';
   } else {
-    html = `<div style="margin-bottom:8px;">鍙戠幇 <span class="error">${total}</span> 涓棶棰橈細</div>` + html;
-    html += '<div style="margin-top:10px;padding:10px;background:#1a1a2a;border-radius:8px;font-size:13px;"><div class="info">馃挕 妫€鏌ユ竻鍗曪細</div>1锔忊儯 姣忔潯璇彞鏈熬鏈?b>;</b>鍚楋紵 2锔忊儯 鎷彿<b>{}</b>鎴愬鍚楋紵 3锔忊儯 寮曡剼璁緋inMode浜嗗悧锛?4锔忊儯 鍙橀噺澹版槑绫诲瀷浜嗗悧锛?5锔忊儯 姣旇緝鐢?b>==</b>涓嶆槸<b>=</b></div>';
+    html = `<div style="margin-bottom:8px;">发现 <span class="error">${total}</span> 个问题：</div>` + html;
+    html += '<div style="margin-top:10px;padding:10px;background:#1a1a2a;border-radius:8px;font-size:13px;"><div class="info">💡 检查清单：</div>1️⃣ 每条语句末尾有<b>;</b>吗？ 2️⃣ 括号<b>{}</b>成对吗？ 3️⃣ 引脚设pinMode了吗？ 4️⃣ 变量声明类型了吗？ 5️⃣ 比较用<b>==</b>不是<b>=</b></div>';
   }
   output.innerHTML = html;
 }
 
-// ==================== 鎬濊矾缂栫▼ ====================
+// ==================== 思路编程 ====================
 const CODE_TEMPLATES = [
-  { icon:'馃挕', name:'LED闂儊', desc:'LED姣忛殧1绉掍寒鐏?, keywords:['led','鐏?,'闂儊','浜伃','blink'],
-    code:`// LED闂儊
+  { icon:'💡', name:'LED闪烁', desc:'LED每隔1秒亮灭', keywords:['led','灯','闪烁','亮灭','blink'],
+    code:`// LED闪烁
 void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
 }
@@ -576,8 +580,8 @@ void loop() {
   digitalWrite(LED_BUILTIN, LOW);
   delay(1000);
 }` },
-  { icon:'馃敇', name:'鎸夐挳鎺у埗LED', desc:'鎸変笅浜澗寮€鐏?, keywords:['鎸夐挳','鎸夐敭','鎸変笅','button'],
-    code:`// 鎸夐挳鎺у埗LED
+  { icon:'🔘', name:'按钮控制LED', desc:'按下亮松开灭', keywords:['按钮','按键','按下','button'],
+    code:`// 按钮控制LED
 const int btn = 2, led = 13;
 void setup() {
   pinMode(btn, INPUT_PULLUP);
@@ -589,27 +593,28 @@ void loop() {
   else
     digitalWrite(led, LOW);
 }` },
-  { icon:'馃摗', name:'涓插彛鎵撳嵃', desc:'鍚戠數鑴戝彂娑堟伅', keywords:['涓插彛','鎵撳嵃','serial','鏄剧ず'],
-    code:`// 涓插彛閫氫俊
+  { icon:'📡', name:'串口打印', desc:'向电脑发消息', keywords:['串口','打印','serial','显示'],
+    code:`// 串口通信
 void setup() {
   Serial.begin(115200);
-  Serial.println("鍚姩锛?);
+  Serial.println("启动！");
 }
 void loop() {
-  Serial.print("鏃堕棿: ");
+  Serial.print("时间: ");
   Serial.println(millis()/1000);
   delay(1000);
 }` },
-  { icon:'馃幍', name:'铚傞福鍣?, desc:'鎾斁澹伴煶', keywords:['铚傞福鍣?,'澹伴煶','tone','buzzer','鍝?],
-    code:`// 铚傞福鍣?const int buz = 8;
+  { icon:'🎵', name:'蜂鸣器', desc:'播放声音', keywords:['蜂鸣器','声音','tone','buzzer','响'],
+    code:`// 蜂鸣器
+const int buz = 8;
 void setup() { pinMode(buz, OUTPUT); }
 void loop() {
   tone(buz, 523, 300); delay(400);
   tone(buz, 587, 300); delay(400);
   tone(buz, 659, 300); delay(1000);
 }` },
-  { icon:'馃搹', name:'瓒呭０娉㈡祴璺?, desc:'HC-SR04娴嬭窛绂?, keywords:['瓒呭０娉?,'璺濈','瓒呭０','娴嬭窛','闅滅'],
-    code:`// HC-SR04娴嬭窛
+  { icon:'📏', name:'超声波测距', desc:'HC-SR04测距离', keywords:['超声波','距离','超声','测距','障碍'],
+    code:`// HC-SR04测距
 const int trig=9, echo=10;
 void setup() {
   pinMode(trig,OUTPUT); pinMode(echo,INPUT);
@@ -620,11 +625,11 @@ void loop() {
   digitalWrite(trig,HIGH); delayMicroseconds(10);
   digitalWrite(trig,LOW);
   long d=pulseIn(echo,HIGH)*0.034/2;
-  Serial.print("璺濈: "); Serial.print(d);
+  Serial.print("距离: "); Serial.print(d);
   Serial.println(" cm");
   delay(500);
 }` },
-  { icon:'馃敡', name:'鑸垫満鎺у埗', desc:'0掳鍒?80掳鎽嗗姩', keywords:['鑸垫満','servo','瑙掑害','杞姩'],
+  { icon:'🔧', name:'舵机控制', desc:'0°到180°摆动', keywords:['舵机','servo','角度','转动'],
     code:`#include <Servo.h>
 Servo s;
 void setup() { s.attach(9); }
@@ -632,20 +637,20 @@ void loop() {
   for(int a=0;a<=180;a++){ s.write(a); delay(15); }
   for(int a=180;a>=0;a--){ s.write(a); delay(15); }
 }` },
-  { icon:'馃尅锔?, name:'娓╁害浼犳劅鍣?, desc:'璇绘俯搴︽樉绀?, keywords:['娓╁害','浼犳劅鍣?,'DHT','澶氬皯搴?],
-    code:`// 娓╁害璇诲彇(妯℃嫙浼犳劅鍣?
+  { icon:'🌡️', name:'温度传感器', desc:'读温度显示', keywords:['温度','传感器','DHT','多少度'],
+    code:`// 温度读取(模拟传感器)
 const int tPin = A0;
 void setup() { Serial.begin(115200); }
 void loop() {
   int r = analogRead(tPin);
   float v = r * 3.3 / 4095.0;
   float t = (v - 0.5) * 100;
-  Serial.print("娓╁害: "); Serial.print(t);
-  Serial.println(" 掳C");
+  Serial.print("温度: "); Serial.print(t);
+  Serial.println(" °C");
   delay(1000);
 }` },
-  { icon:'馃殾', name:'浜ら€氱伅', desc:'绾㈤粍缁垮惊鐜?, keywords:['浜ら€氱伅','绾㈢豢鐏?,'绾㈤粍缁?],
-    code:`// 浜ら€氱伅
+  { icon:'🚦', name:'交通灯', desc:'红黄绿循环', keywords:['交通灯','红绿灯','红黄绿'],
+    code:`// 交通灯
 const int r=11,y=12,g=13;
 void setup() {
   pinMode(r,OUTPUT);pinMode(y,OUTPUT);pinMode(g,OUTPUT);
@@ -655,21 +660,22 @@ void loop() {
   for(int i=0;i<3;i++){digitalWrite(y,HIGH);delay(500);digitalWrite(y,LOW);delay(500);}
   digitalWrite(r,HIGH);delay(5000);digitalWrite(r,LOW);
 }` },
-  { icon:'馃敘', name:'璁℃暟鍣?, desc:'鎸夐挳鎸変竴娆?1', keywords:['璁℃暟','counter','鍔犱竴','绱姞'],
-    code:`// 鎸夐挳璁℃暟鍣?const int btn=2; int cnt=0,last=HIGH;
+  { icon:'🔢', name:'计数器', desc:'按钮按一次+1', keywords:['计数','counter','加一','累加'],
+    code:`// 按钮计数器
+const int btn=2; int cnt=0,last=HIGH;
 void setup(){pinMode(btn,INPUT_PULLUP);Serial.begin(115200);}
 void loop(){
   int s=digitalRead(btn);
   if(last==HIGH&&s==LOW){cnt++;Serial.println(cnt);delay(50);}
   last=s;
 }` },
-  { icon:'馃寪', name:'WiFi杩炴帴', desc:'ESP32鑱旂綉', keywords:['wifi','鑱旂綉','杩炴帴','涓婄綉'],
+  { icon:'🌐', name:'WiFi连接', desc:'ESP32联网', keywords:['wifi','联网','连接','上网'],
     code:`#include <WiFi.h>
 void setup() {
   Serial.begin(115200);
-  WiFi.begin("WiFi鍚?,"瀵嗙爜");
+  WiFi.begin("WiFi名","密码");
   while(WiFi.status()!=WL_CONNECTED){delay(500);Serial.print(".");}
-  Serial.println("宸茶繛鎺ワ紒");
+  Serial.println("已连接！");
 }
 void loop() {}` },
 ];
@@ -690,13 +696,13 @@ function useTemplate(name) {
     currentGeneratedCode = t.code;
     document.getElementById('generate-output').innerHTML = `<pre class="code-block">${highlightArduino(t.code)}</pre>`;
     document.getElementById('generate-actions').style.display = 'flex';
-    document.getElementById('generate-status').innerHTML = `<span class="success">鉁?${t.name} 鈥?${t.desc}</span>`;
+    document.getElementById('generate-status').innerHTML = `<span class="success">✅ ${t.name} — ${t.desc}</span>`;
   }
 }
 
 function generateCode() {
   const idea = document.getElementById('generate-idea').value.trim();
-  if (!idea) { document.getElementById('generate-output').innerHTML = '<div class="welcome"><div class="icon">馃挕</div><p>鎻忚堪鎯冲仛鐨勪簨鎯咃紝鎴栫偣妯℃澘</p></div>'; return; }
+  if (!idea) { document.getElementById('generate-output').innerHTML = '<div class="welcome"><div class="icon">💡</div><p>描述想做的事情，或点模板</p></div>'; return; }
 
   const lower = idea.toLowerCase();
   let best = null, bestScore = 0;
@@ -709,22 +715,22 @@ function generateCode() {
   if (best && bestScore >= 2) {
     currentGeneratedCode = best.code;
     document.getElementById('generate-output').innerHTML = `<pre class="code-block">${highlightArduino(best.code)}</pre>`;
-    document.getElementById('generate-status').innerHTML = `<span class="success">鉁?${best.name} 鈥?${best.desc}</span>`;
+    document.getElementById('generate-status').innerHTML = `<span class="success">✅ ${best.name} — ${best.desc}</span>`;
   } else {
     currentGeneratedCode = generateBasic(idea);
     document.getElementById('generate-output').innerHTML = `<pre class="code-block">${highlightArduino(currentGeneratedCode)}</pre>`;
-    document.getElementById('generate-status').innerHTML = '<span class="warn">鈿狅笍 鏈簿纭尮閰嶏紝浠ヤ笅鏄熀纭€妗嗘灦</span>';
+    document.getElementById('generate-status').innerHTML = '<span class="warn">⚠️ 未精确匹配，以下是基础框架</span>';
   }
   document.getElementById('generate-actions').style.display = 'flex';
 }
 
 function generateBasic(idea) {
-  let c = '// 鍩虹妗嗘灦\n'; const l = idea.toLowerCase();
-  if (l.includes('led')||l.includes('鐏?)) c += 'const int led = 13;\n';
-  if (l.includes('鎸夐挳')||l.includes('button')) c += 'const int btn = 2;\n';
+  let c = '// 基础框架\n'; const l = idea.toLowerCase();
+  if (l.includes('led')||l.includes('灯')) c += 'const int led = 13;\n';
+  if (l.includes('按钮')||l.includes('button')) c += 'const int btn = 2;\n';
   c += 'void setup() {\n  Serial.begin(115200);\n';
-  if (l.includes('led')||l.includes('鐏?)) c += '  pinMode(led, OUTPUT);\n';
-  if (l.includes('鎸夐挳')||l.includes('button')) c += '  pinMode(btn, INPUT_PULLUP);\n';
+  if (l.includes('led')||l.includes('灯')) c += '  pinMode(led, OUTPUT);\n';
+  if (l.includes('按钮')||l.includes('button')) c += '  pinMode(btn, INPUT_PULLUP);\n';
   c += '}\n\nvoid loop() {\n  // TODO\n  delay(100);\n}';
   return c;
 }
@@ -742,7 +748,7 @@ function highlightArduino(code) {
 
 function copyGeneratedCode() {
   if (currentGeneratedCode) navigator.clipboard.writeText(currentGeneratedCode).then(()=>{
-    document.getElementById('generate-status').innerHTML='<span class="success">鉁?宸插鍒讹紒</span>';
+    document.getElementById('generate-status').innerHTML='<span class="success">✅ 已复制！</span>';
   });
 }
 
@@ -753,7 +759,7 @@ function explainGeneratedCode() {
   }
 }
 
-// ==================== AI 澧炲己 ====================
+// ==================== AI 增强 ====================
 const PRESET_API = {
   url: 'https://api.deepseek.com/v1/chat/completions',
   key: 'sk-9b430b2f0cb0433ea52e02d8cefd9525',
@@ -770,13 +776,13 @@ function getAPIConfig() {
 function hasAPI() { const c=getAPIConfig(); return !!(c.url&&c.key); }
 
 function copyAndAskDouDou(text, label) {
-  const msg = `馃惗 璞嗚眴锛屽府鎴戝仛${label}锛歕n\n${text}`;
+  const msg = `🐶 豆豆，帮我做${label}：\n\n${text}`;
   navigator.clipboard.writeText(msg).then(()=>{}).catch(()=>{});
 }
 
 async function callAI(prompt, output, status) {
   if (!hasAPI()) {
-    status.innerHTML = ''; output.innerHTML = '<div class="status-hint"><div style="font-size:28px;margin-bottom:6px;">馃搵</div><div style="color:var(--green);font-weight:700;margin-bottom:6px;">鏈厤缃瓵PI锛屽唴瀹瑰凡澶嶅埗鍒板壀璐存澘</div><div style="font-size:13px;color:var(--text2);">鍦ㄨ亰澶╃獥鍙ｇ矘璐村彂缁欒眴璞嗗嵆鍙?/div></div>';
+    status.innerHTML = ''; output.innerHTML = '<div class="status-hint"><div style="font-size:28px;margin-bottom:6px;">📋</div><div style="color:var(--green);font-weight:700;margin-bottom:6px;">未配置API，内容已复制到剪贴板</div><div style="font-size:13px;color:var(--text2);">在聊天窗口粘贴发给豆豆即可</div></div>';
     return { noAPI: true };
   }
   try {
@@ -785,52 +791,52 @@ async function callAI(prompt, output, status) {
       method: 'POST',
       headers: {'Content-Type':'application/json','Authorization':`Bearer ${config.key}`},
       body: JSON.stringify({model:config.model,messages:[
-        {role:'system',content:'浣犳槸ESP32/Arduino鏁欏鍔╂墜锛岄潰鍚戝皬瀛︾敓銆傜敤閫氫織涓枃瑙ｉ噴锛屽姞姣斿柣銆傚洖澶嶇畝娲併€?},
+        {role:'system',content:'你是ESP32/Arduino教学助手，面向小学生。用通俗中文解释，加比喻。回复简洁。'},
         {role:'user',content:prompt}
       ],temperature:0.3,max_tokens:2000}),
     });
     const data = await resp.json();
-    if (data.error) throw new Error(data.error.message||'API閿欒');
-    return { text: data.choices?.[0]?.message?.content || '锛堢┖锛? };
-  } catch(e) { return { error: `璇锋眰澶辫触: ${e.message}` }; }
+    if (data.error) throw new Error(data.error.message||'API错误');
+    return { text: data.choices?.[0]?.message?.content || '（空）' };
+  } catch(e) { return { error: `请求失败: ${e.message}` }; }
 }
 
 async function explainWithAI() {
   const code = document.getElementById('explain-input').value.trim();
   const out = document.getElementById('explain-output'), st = document.getElementById('explain-status');
-  if (!code) { out.innerHTML='<span class="warn">鈿狅笍 璇峰厛绮樿创浠ｇ爜</span>'; return; }
-  st.innerHTML = '<span class="spinner"></span>AI鍒嗘瀽涓?..';
-  const r = await callAI(`閫愯瑙ｈ杩欐Arduino浠ｇ爜锛岀敤閫氫織璇█+姣斿柣閫傚悎灏忓鐢燂細\n\n\`\`\`cpp\n${code}\n\`\`\``, out, st);
+  if (!code) { out.innerHTML='<span class="warn">⚠️ 请先粘贴代码</span>'; return; }
+  st.innerHTML = '<span class="spinner"></span>AI分析中...';
+  const r = await callAI(`逐行解读这段Arduino代码，用通俗语言+比喻适合小学生：\n\n\`\`\`cpp\n${code}\n\`\`\``, out, st);
   if (r.noAPI) return;
-  if (r.error) { st.innerHTML=''; out.innerHTML=`<div class="error">鉂?${escapeHtml(r.error)}</div>`; }
-  else { st.innerHTML='<span class="success">鉁?瀹屾垚</span>'; out.innerHTML=`<div style="line-height:1.8;">${escapeHtml(r.text).replace(/\n/g,'<br>')}</div>`; }
+  if (r.error) { st.innerHTML=''; out.innerHTML=`<div class="error">❌ ${escapeHtml(r.error)}</div>`; }
+  else { st.innerHTML='<span class="success">✅ 完成</span>'; out.innerHTML=`<div style="line-height:1.8;">${escapeHtml(r.text).replace(/\n/g,'<br>')}</div>`; }
 }
 
 async function analyzeWithAI() {
   const code = document.getElementById('debug-code').value.trim(), err = document.getElementById('debug-error').value.trim();
   const out = document.getElementById('debug-output'), st = document.getElementById('debug-status');
-  if (!code&&!err) { out.innerHTML='<span class="warn">鈿狅笍 璇风矘璐翠唬鐮佹垨閿欒</span>'; return; }
-  st.innerHTML = '<span class="spinner"></span>AI鍒嗘瀽涓?..';
-  let p = '鍒嗘瀽Arduino/ESP32浠ｇ爜閿欒锛岄潰鍚戝皬瀛︾敓鐢ㄩ€氫織璇█锛?;
-  if (code) p += `\n浠ｇ爜锛歕n\`\`\`\n${code}\n\`\`\``;
-  if (err) p += `\n缂栬瘧鍣ㄦ姤閿欙細\n${err}`;
-  p += '\n鍒楀嚭锛?)閿欒浣嶇疆 2)涓轰粈涔堥敊(姣斿柣) 3)鎬庝箞鏀?缁欎唬鐮?';
+  if (!code&&!err) { out.innerHTML='<span class="warn">⚠️ 请粘贴代码或错误</span>'; return; }
+  st.innerHTML = '<span class="spinner"></span>AI分析中...';
+  let p = '分析Arduino/ESP32代码错误，面向小学生用通俗语言：';
+  if (code) p += `\n代码：\n\`\`\`\n${code}\n\`\`\``;
+  if (err) p += `\n编译器报错：\n${err}`;
+  p += '\n列出：1)错误位置 2)为什么错(比喻) 3)怎么改(给代码)';
   const r = await callAI(p, out, st);
   if (r.noAPI) return;
-  if (r.error) { st.innerHTML=''; out.innerHTML=`<div class="error">鉂?${escapeHtml(r.error)}</div>`; }
-  else { st.innerHTML='<span class="success">鉁?瀹屾垚</span>'; out.innerHTML=`<div style="line-height:1.8;">${escapeHtml(r.text).replace(/\n/g,'<br>')}</div>`; }
+  if (r.error) { st.innerHTML=''; out.innerHTML=`<div class="error">❌ ${escapeHtml(r.error)}</div>`; }
+  else { st.innerHTML='<span class="success">✅ 完成</span>'; out.innerHTML=`<div style="line-height:1.8;">${escapeHtml(r.text).replace(/\n/g,'<br>')}</div>`; }
 }
 
 async function generateWithAI() {
   const idea = document.getElementById('generate-idea').value.trim();
   const out = document.getElementById('generate-output'), st = document.getElementById('generate-status');
-  if (!idea) { out.innerHTML='<span class="warn">鈿狅笍 璇锋弿杩?/span>'; return; }
-  st.innerHTML = '<span class="spinner"></span>AI鐢熸垚涓?..';
-  const r = await callAI(`鏍规嵁鎻忚堪鐢熸垚瀹屾暣Arduino/ESP32浠ｇ爜锛岄€傚悎灏忓鐢熼槄璇伙紝鍔犱腑鏂囨敞閲婏細\n\n${idea}\n\n鐩存帴杈撳嚭浠ｇ爜銆俙, out, st);
+  if (!idea) { out.innerHTML='<span class="warn">⚠️ 请描述</span>'; return; }
+  st.innerHTML = '<span class="spinner"></span>AI生成中...';
+  const r = await callAI(`根据描述生成完整Arduino/ESP32代码，适合小学生阅读，加中文注释：\n\n${idea}\n\n直接输出代码。`, out, st);
   if (r.noAPI) return;
-  if (r.error) { st.innerHTML=''; out.innerHTML=`<div class="error">鉂?${escapeHtml(r.error)}</div>`; }
+  if (r.error) { st.innerHTML=''; out.innerHTML=`<div class="error">❌ ${escapeHtml(r.error)}</div>`; }
   else {
-    st.innerHTML='<span class="success">鉁?瀹屾垚</span>';
+    st.innerHTML='<span class="success">✅ 完成</span>';
     const m = r.text.match(/```(?:cpp|arduino)?\s*\n?([\s\S]*?)```/);
     currentGeneratedCode = m ? m[1].trim() : r.text;
     out.innerHTML = `<pre class="code-block">${highlightArduino(currentGeneratedCode)}</pre>`;
@@ -838,16 +844,16 @@ async function generateWithAI() {
   }
 }
 
-// ==================== API 閰嶇疆 ====================
+// ==================== API 配置 ====================
 function toggleAPIConfig() { document.getElementById('api-config').classList.toggle('show'); }
 function saveAPIConfig() {
   localStorage.setItem('ai_api_url', document.getElementById('api-url').value.trim());
   localStorage.setItem('ai_api_key', document.getElementById('api-key').value.trim());
   localStorage.setItem('ai_api_model', document.getElementById('api-model').value.trim());
-  alert('鉁?閰嶇疆宸蹭繚瀛?);
+  alert('✅ 配置已保存');
 }
 
-// ==================== 閫熸煡鎵嬪唽 ====================
+// ==================== 速查手册 ====================
 function renderQuickRef() {
   let h = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">';
   for (const [fn,d] of Object.entries(ARDUINO_DOC)) {
@@ -858,7 +864,7 @@ function renderQuickRef() {
       ${d.note?`<div style="color:var(--yellow);font-size:11px;">${d.note}</div>`:''}
     </div>`;
   }
-  h += '</div><div style="margin-top:12px;"><b style="color:var(--accent2);">馃搻 缁撴瀯閫熸煡</b></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px;">';
+  h += '</div><div style="margin-top:12px;"><b style="color:var(--accent2);">📐 结构速查</b></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px;">';
   for (const [k,d] of Object.entries(ARDUINO_STRUCTURE)) {
     h += `<div style="background:#1a1a2e;padding:8px;border-radius:8px;font-size:12px;"><b style="color:#d2a8ff;">${k}</b><br><span style="color:#aaa;">${d}</span></div>`;
   }
@@ -866,7 +872,7 @@ function renderQuickRef() {
   document.getElementById('quickref-content').innerHTML = h;
 }
 
-// ==================== 鍒濆鍖?====================
+// ==================== 初始化 ====================
 function init() {
   renderTemplates();
   renderQuickRef();
@@ -881,7 +887,7 @@ function init() {
     localStorage.setItem('ai_api_key', PRESET_API.key);
     localStorage.setItem('ai_api_model', PRESET_API.model);
   }
-  // 娉ㄥ唽 Service Worker
+  // 注册 Service Worker
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js').catch(() => {});
   }
