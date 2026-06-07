@@ -9,8 +9,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.*;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 
 public class MainActivity extends Activity {
     private WebView webView;
@@ -78,17 +76,10 @@ public class MainActivity extends Activity {
             }
         });
 
-        // Load PWA from assets with explicit UTF-8 encoding
-        try {
-            InputStream is = getAssets().open("index.html");
-            byte[] buffer = new byte[is.available()];
-            is.read(buffer);
-            is.close();
-            String html = new String(buffer, StandardCharsets.UTF_8);
-            webView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "UTF-8", null);
-        } catch (Exception e) {
-            webView.loadUrl("file:///android_asset/index.html");
-        }
+        settings.setDefaultTextEncodingName("UTF-8");
+
+        // Load PWA from assets with explicit UTF-8
+        webView.loadUrl("file:///android_asset/index.html");
     }
 
     @Override
