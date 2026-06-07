@@ -15,10 +15,11 @@ jobs:
       - uses: android-actions/setup-android@v3
         with:
           packages: 'platforms;android-34 build-tools;34.0.0'
-      - name: Grant wrapper permission
-        run: chmod +x gradlew
+      - uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.5'
       - name: Build
-        run: ./gradlew assembleDebug --no-daemon --stacktrace
+        run: gradle assembleDebug --no-daemon --stacktrace
       - uses: actions/upload-artifact@v4
         with:
           name: doudou-apk
