@@ -1,4 +1,3 @@
-// Top-level build file
 buildscript {
     repositories {
         google()
@@ -9,9 +8,4 @@ buildscript {
     }
 }
 
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
+// Note: dependency resolution is configured in settings.gradle
