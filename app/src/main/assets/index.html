@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="编程助教">
 <meta name="theme-color" content="#1a1a2e">
 <link rel="manifest" href="./manifest.json">
-<title>🐶 豆豆编程助教</title>
+<title>🐶 豆豆编程助教 — ESP32课堂工具</title>
 <style>
   :root {
     --bg: #1a1a2e;
@@ -21,221 +21,192 @@
     --green: #00e676;
     --yellow: #ffd740;
     --red: #ff5252;
-    --radius: 10px;
+    --radius: 12px;
+    --font-xl: 20px;
+    --font-lg: 17px;
+    --font-md: 15px;
+    --font-sm: 13px;
     --safe-bottom: env(safe-area-inset-bottom, 8px);
   }
-
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-
   body {
-    font-family: 'Segoe UI', 'Microsoft YaHei', -apple-system, sans-serif;
+    font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
     min-height: 100dvh;
-    font-size: 15px;
+    font-size: var(--font-md);
     padding-bottom: calc(64px + var(--safe-bottom));
     -webkit-font-smoothing: antialiased;
   }
-
-  /* Header */
   .header {
     background: linear-gradient(135deg, var(--surface2), var(--surface));
-    padding: 12px 16px;
-    display: flex; align-items: center; gap: 10px;
+    padding: 18px 24px;
+    display: flex; align-items: center; gap: 14px;
     border-bottom: 2px solid var(--accent);
-    position: sticky; top: 0; z-index: 100;
-    backdrop-filter: blur(10px);
   }
-  .header .logo { font-size: 28px; }
-  .header h1 { font-size: 18px; color: #fff; line-height: 1.2; }
-  .header .sub { font-size: 11px; color: var(--text2); }
-
-  /* 主内容 */
-  .main {
-    max-width: 800px; margin: 0 auto;
-    padding: 12px;
+  .header .logo { font-size: 36px; }
+  .header h1 { font-size: 26px; color: #fff; }
+  .header .sub { font-size: var(--font-sm); color: var(--text2); margin-top: 2px; }
+  .tabs {
+    display: flex; gap: 0;
+    background: var(--surface);
+    border-bottom: 1px solid #2a2a4a;
+    padding: 0 24px;
   }
-
+  .tab-btn {
+    padding: 14px 28px;
+    background: none; border: none;
+    color: var(--text2); font-size: var(--font-lg);
+    cursor: pointer; border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    font-family: inherit;
+    white-space: nowrap;
+  }
+  .tab-btn:hover { color: #fff; }
+  .tab-btn.active { color: var(--accent2); border-bottom-color: var(--accent2); }
+  .main { max-width: 1400px; margin: 0 auto; padding: 20px 24px; }
   .panel { display: none; }
   .panel.active { display: block; }
 
-  /* 卡片 */
+  /* 通用卡片 */
   .card {
     background: var(--surface);
     border-radius: var(--radius);
-    padding: 14px; margin-bottom: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
     border: 1px solid #2a2a4a;
   }
-  .card h3 {
-    font-size: 15px; margin-bottom: 10px;
-    color: var(--accent2); display: flex; align-items: center; gap: 6px;
-  }
+  .card h3 { font-size: var(--font-lg); margin-bottom: 12px; color: var(--accent2); }
+  .row { display: flex; gap: 16px; flex-wrap: wrap; }
+  .col { flex: 1; min-width: 300px; }
 
   /* 输入框 */
   textarea {
-    width: 100%; background: #0d1117; color: #c9d1d9;
+    width: 100%; min-height: 220px;
+    background: #0d1117; color: #c9d1d9;
     border: 1px solid #30363d; border-radius: 8px;
-    padding: 12px; font-size: 14px;
-    font-family: 'Consolas', 'Microsoft YaHei', monospace;
-    resize: vertical; line-height: 1.5;
-    min-height: 160px;
+    padding: 14px; font-size: 15px;
+    font-family: 'Cascadia Code', 'Consolas', 'Microsoft YaHei', monospace;
+    resize: vertical; line-height: 1.6;
+    tab-size: 2;
   }
   textarea:focus { outline: none; border-color: var(--accent2); }
 
   .input-label {
     display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 6px; font-weight: 600; font-size: 14px;
+    margin-bottom: 8px;
   }
+  .input-label span { font-weight: 600; font-size: var(--font-md);
+    padding-bottom: calc(64px + var(--safe-bottom));
+    -webkit-font-smoothing: antialiased; }
 
   /* 按钮 */
   .btn {
-    padding: 10px 16px; border: none; border-radius: 8px;
-    font-size: 14px; cursor: pointer; font-weight: 600;
-    transition: all 0.15s; font-family: inherit;
-    touch-action: manipulation; min-height: 44px;
-    display: inline-flex; align-items: center; gap: 4px;
-    white-space: nowrap;
+    padding: 10px 22px; border: none; border-radius: 8px;
+    font-size: var(--font-md);
+    padding-bottom: calc(64px + var(--safe-bottom));
+    -webkit-font-smoothing: antialiased; cursor: pointer; font-weight: 600;
+    transition: all 0.2s; font-family: inherit;
   }
-  .btn:active { transform: scale(0.96); }
   .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: #ff6b81; transform: translateY(-1px); }
   .btn-secondary { background: var(--surface2); color: var(--accent2); border: 1px solid var(--accent2); }
-  .btn-sm { padding: 8px 12px; font-size: 13px; min-height: 36px; }
-  .btn-block { width: 100%; justify-content: center; }
-  .btn-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+  .btn-secondary:hover { background: #1a4a7a; }
+  .btn-sm { padding: 6px 14px; font-size: var(--font-sm); }
+  .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
 
   /* 输出区域 */
   .output {
     background: #0d1117; border: 1px solid #30363d;
-    border-radius: 8px; padding: 14px; min-height: 120px;
+    border-radius: 8px; padding: 16px; min-height: 100px;
     font-family: 'Microsoft YaHei', sans-serif;
-    line-height: 1.7; white-space: pre-wrap;
-    font-size: 14px; overflow-x: auto;
+    line-height: 1.8; white-space: pre-wrap;
+    font-size: var(--font-md);
+    padding-bottom: calc(64px + var(--safe-bottom));
+    -webkit-font-smoothing: antialiased;
+    overflow-x: auto;
   }
-  .code-block {
-    background: #0d1117; border: 1px solid #30363d;
-    border-radius: 8px; padding: 12px; margin: 8px 0;
-    font-family: 'Consolas', monospace; font-size: 13px;
-    line-height: 1.5; overflow-x: auto; white-space: pre-wrap;
-  }
-
-  /* 语法高亮颜色 */
-  .hl-kw { color: #ff7b72; }
-  .hl-fn { color: #d2a8ff; }
-  .hl-str { color: #a5d6ff; }
-  .hl-cmt { color: #8b949e; }
-  .hl-num { color: #79c0ff; }
-  .hl-macro { color: #ff7b72; }
-
+  .output .line-num { color: #6e7681; margin-right: 8px; user-select: none; }
+  .output .keyword { color: #ff7b72; }
+  .output .function { color: #d2a8ff; }
+  .output .string { color: #a5d6ff; }
+  .output .comment { color: #8b949e; font-style: italic; }
+  .output .number { color: #79c0ff; }
+  .output .explain { color: #7ee787; margin-left: 8px; }
   .output .warn { color: var(--yellow); }
   .output .error { color: var(--red); }
   .output .success { color: var(--green); }
   .output .info { color: var(--accent2); }
-  .output .text2 { color: var(--text2); }
-  .output .line-num { color: #6e7681; margin-right: 6px; user-select: none; font-size: 12px; }
-  .output .explain { color: #7ee787; }
 
   /* 错误卡片 */
   .error-card {
     background: #2d1518; border: 1px solid #5a1e1e;
-    border-radius: 8px; padding: 12px; margin: 6px 0;
+    border-radius: 8px; padding: 14px; margin: 8px 0;
   }
-  .error-card .err-type { color: var(--red); font-weight: 700; }
-  .error-card .err-msg { color: #ff9999; margin-top: 2px; font-size: 13px; }
-  .error-card .err-fix { color: var(--green); margin-top: 4px; font-size: 13px; }
+  .error-card .err-type { color: var(--red); font-weight: 700; font-size: var(--font-md);
+    padding-bottom: calc(64px + var(--safe-bottom));
+    -webkit-font-smoothing: antialiased; }
+  .error-card .err-msg { color: #ff9999; margin-top: 4px; }
+  .error-card .err-fix { color: var(--green); margin-top: 6px; }
 
-  /* 模板网格 */
-  .template-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-    gap: 8px;
-  }
+  /* 模板卡片 */
+  .template-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
   .tpl-card {
-    background: var(--surface2); border-radius: 8px; padding: 12px 8px;
+    background: var(--surface2); border-radius: 8px; padding: 14px;
     cursor: pointer; border: 1px solid transparent;
-    text-align: center; transition: all 0.15s;
-    touch-action: manipulation;
+    transition: all 0.2s;
   }
-  .tpl-card:active { transform: scale(0.95); border-color: var(--accent2); }
-  .tpl-card .tpl-icon { font-size: 24px; margin-bottom: 4px; }
-  .tpl-card .tpl-name { font-weight: 600; color: #fff; font-size: 13px; }
-  .tpl-card .tpl-desc { font-size: 11px; color: var(--text2); margin-top: 2px; }
+  .tpl-card:hover { border-color: var(--accent2); transform: translateY(-2px); }
+  .tpl-card .tpl-icon { font-size: 28px; margin-bottom: 6px; }
+  .tpl-card .tpl-name { font-weight: 600; color: #fff; }
+  .tpl-card .tpl-desc { font-size: var(--font-sm); color: var(--text2); margin-top: 4px; }
 
-  /* 底部导航栏 */
-  .bottom-nav {
-    position: fixed; bottom: 0; left: 0; right: 0;
-    background: var(--surface);
-    border-top: 1px solid #2a2a4a;
-    display: flex; z-index: 200;
-    padding-bottom: var(--safe-bottom);
-    backdrop-filter: blur(10px);
-  }
-  .nav-item {
-    flex: 1; display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    padding: 8px 4px; cursor: pointer;
-    color: var(--text2); font-size: 10px;
-    border: none; background: none;
-    transition: color 0.2s; font-family: inherit;
-    touch-action: manipulation; gap: 2px;
-  }
-  .nav-item .nav-icon { font-size: 20px; }
-  .nav-item.active { color: var(--accent2); }
-  .nav-item:active { background: rgba(0,210,255,0.08); }
-
-  /* 加载 */
+  /* 加载动画 */
   .spinner {
-    display: inline-block; width: 16px; height: 16px;
+    display: inline-block; width: 18px; height: 18px;
     border: 2px solid var(--text2); border-top-color: var(--accent2);
     border-radius: 50%; animation: spin 0.6s linear infinite;
-    vertical-align: middle; margin-right: 6px;
+    vertical-align: middle; margin-right: 8px;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  .status { font-size: 12px; color: var(--text2); margin-top: 6px; display: flex; align-items: center; gap: 6px; }
+  /* 状态栏 */
+  .status { font-size: var(--font-sm); color: var(--text2); margin-top: 8px; display: flex; align-items: center; gap: 8px; }
 
-  /* API 配置 */
-  .api-config { display: none; margin-top: 10px; }
+  /* 响应式 */
+  @media (max-width: 768px) {
+    .tabs { padding: 0 8px; overflow-x: auto; }
+    .tab-btn { padding: 12px 16px; font-size: var(--font-md);
+    padding-bottom: calc(64px + var(--safe-bottom));
+    -webkit-font-smoothing: antialiased; }
+    .col { min-width: 100%; }
+    .template-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* 代码高亮 - Arduino */
+  .code-block {
+    background: #0d1117; border: 1px solid #30363d;
+    border-radius: 8px; padding: 16px; margin: 8px 0;
+    font-family: 'Cascadia Code', 'Consolas', monospace;
+    font-size: 14px; line-height: 1.6; overflow-x: auto;
+  }
+  .hl-kw { color: #ff7b72; }      /* 关键字 */
+  .hl-fn { color: #d2a8ff; }      /* 函数名 */
+  .hl-str { color: #a5d6ff; }     /* 字符串 */
+  .hl-cmt { color: #8b949e; }     /* 注释 */
+  .hl-num { color: #79c0ff; }     /* 数字 */
+  .hl-type { color: #ffa657; }    /* 类型 */
+  .hl-macro { color: #ff7b72; }   /* 预处理 */
+
+  .api-config { display: none; margin-top: 12px; }
   .api-config.show { display: block; }
   .api-config input {
-    width: 100%; padding: 10px; background: #0d1117; border: 1px solid #30363d;
-    border-radius: 6px; color: #c9d1d9; font-size: 13px; margin: 4px 0;
+    width: 100%; padding: 8px 12px; background: #0d1117; border: 1px solid #30363d;
+    border-radius: 6px; color: #c9d1d9; font-size: var(--font-sm); margin: 4px 0;
   }
-
-  /* 平板适配 */
-  @media (min-width: 768px) {
-    body { font-size: 16px; }
-    .main { padding: 20px; }
-    .header { padding: 16px 24px; }
-    .header h1 { font-size: 22px; }
-    .card { padding: 18px; }
-    .tpl-card .tpl-icon { font-size: 28px; }
-    .tpl-card .tpl-name { font-size: 14px; }
-    .row { display: flex; gap: 14px; }
-    .col { flex: 1; min-width: 0; }
-    textarea { min-height: 200px; font-size: 15px; }
-  }
-
-  /* 横屏平板 */
-  @media (min-width: 1024px) {
-    .main { max-width: 1100px; }
-    .template-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
-  }
-
-  /* 欢迎提示 */
-  .welcome {
-    text-align: center; padding: 40px 20px;
-    color: var(--text2);
-  }
-  .welcome .icon { font-size: 56px; margin-bottom: 12px; }
-  .welcome h2 { color: #fff; font-size: 20px; margin-bottom: 8px; }
-  .welcome p { font-size: 14px; line-height: 1.6; }
-
-  .status-hint {
-    background: #1a2a1a; border: 2px solid var(--green);
-    border-radius: 10px; padding: 16px; text-align: center;
-    margin-top: 10px;
-  }
+  .api-config input:focus { outline: none; border-color: var(--accent2); }
+  .config-row { display: flex; gap: 8px; align-items: end; }
 </style>
 </head>
 <body>
@@ -244,283 +215,619 @@
   <span class="logo">🐶</span>
   <div>
     <h1>豆豆编程助教</h1>
-    <div class="sub">ESP32 / Arduino 课堂工具</div>
+    <div class="sub">ESP32 / Arduino 课堂教学辅助工具 · 面向青少年编程入门</div>
   </div>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('explain')">📖 代码解读</button>
+  <button class="tab-btn" onclick="switchTab('debug')">🔍 错误分析</button>
+  <button class="tab-btn" onclick="switchTab('compile')">🔧 编译纠错</button>
+  <button class="tab-btn" onclick="switchTab('generate')">💡 思路编程</button>
+  <button class="tab-btn" onclick="switchTab('hardware')">🔌 硬件接线</button>
+  <button class="tab-btn" onclick="switchTab('learn')">📚 速查手册</button>
 </div>
 
 <div class="main">
 
-<!-- ============ 代码解读 ============ -->
+<!-- ============ 代码解读面板 ============ -->
 <div id="panel-explain" class="panel active">
-  <div class="card">
-    <div class="input-label"><span>📥 粘贴代码</span></div>
-    <textarea id="explain-input" placeholder="粘贴学生代码...&#10;&#10;void setup() {&#10;  pinMode(2, OUTPUT);&#10;}&#10;void loop() {&#10;  digitalWrite(2, HIGH);&#10;  delay(1000);&#10;  digitalWrite(2, LOW);&#10;  delay(1000);&#10;}"></textarea>
-    <div class="btn-group">
-      <button class="btn btn-primary btn-block" onclick="explainCode()">🔍 解读代码</button>
-      <button class="btn btn-secondary btn-block" onclick="explainWithAI()">💬 求助豆豆解读</button>
-    </div>
-  </div>
-  <div class="card">
-    <h3>📤 解读结果</h3>
-    <div id="explain-output" class="output">
-      <div class="welcome">
-        <div class="icon">📖</div>
-        <p>粘贴 Arduino / ESP32 代码<br>点击"解读代码"查看逐行分析</p>
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <div class="input-label">
+          <span>📥 粘贴代码（Arduino / ESP32）</span>
+        </div>
+        <textarea id="explain-input" placeholder="在此粘贴学生代码...
+
+例如：
+void setup() {
+  pinMode(2, OUTPUT);
+  Serial.begin(115200);
+}
+void loop() {
+  digitalWrite(2, HIGH);
+  delay(1000);
+  digitalWrite(2, LOW);
+  delay(1000);
+  Serial.println(&quot;LED blinked!&quot;);
+}"></textarea>
+        <div class="btn-group">
+          <button class="btn btn-primary" onclick="explainCode()">🔍 解读代码</button>
+          <button class="btn btn-secondary" onclick="explainWithAI()">🤖 AI深度解读</button>
+          <button class="btn btn-secondary btn-sm" onclick="loadExample('blink')">📋 加载示例</button>
+          <button class="btn btn-secondary btn-sm" onclick="loadExample('sensor')">📋 传感器示例</button>
+        </div>
       </div>
     </div>
-    <div id="explain-status" class="status"></div>
+    <div class="col">
+      <div class="card">
+        <h3>📤 代码解读结果</h3>
+        <div id="explain-output" class="output" style="min-height:300px;">
+          <span class="text2">👈 粘贴代码后点击"解读代码"查看逐行分析</span>
+        </div>
+        <div id="explain-status" class="status"></div>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- ============ 错误分析 ============ -->
+<!-- ============ 错误分析面板 ============ -->
 <div id="panel-debug" class="panel">
-  <div class="card">
-    <div class="input-label"><span>📥 代码</span></div>
-    <textarea id="debug-code" placeholder="粘贴有问题的代码..."></textarea>
-  </div>
-  <div class="card">
-    <div class="input-label"><span>📥 错误信息（可选）</span></div>
-    <textarea id="debug-error" placeholder="粘贴编译器报错...&#10;error: expected ';' before '}'" style="min-height:80px;"></textarea>
-  </div>
-  <div class="btn-group">
-    <button class="btn btn-primary btn-block" onclick="analyzeErrors()">🔍 分析错误</button>
-    <button class="btn btn-secondary btn-block" onclick="analyzeWithAI()">💬 求助豆豆分析</button>
-  </div>
-  <div class="card" style="margin-top:12px;">
-    <h3>📤 分析结果</h3>
-    <div id="debug-output" class="output">
-      <div class="welcome">
-        <div class="icon">🔍</div>
-        <p>粘贴代码和错误信息<br>点击"分析错误"自动检测问题</p>
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <div class="input-label"><span>📥 粘贴代码</span></div>
+        <textarea id="debug-code" placeholder="粘贴有问题的代码..."></textarea>
+      </div>
+      <div class="card">
+        <div class="input-label"><span>📥 错误信息（可选，粘贴编译器的报错）</span></div>
+        <textarea id="debug-error" placeholder="粘贴 Arduino IDE / PlatformIO 的错误输出...
+例如：
+error: 'LED_BUILTIN' was not declared in this scope
+error: expected ';' before '}' token" style="min-height:100px;"></textarea>
+        <div class="btn-group">
+          <button class="btn btn-primary" onclick="analyzeErrors()">🔍 分析错误</button>
+          <button class="btn btn-secondary" onclick="analyzeWithAI()">🤖 AI深度分析</button>
+          <button class="btn btn-secondary btn-sm" onclick="loadErrorExample(1)">📋 加载错误示例</button>
+        </div>
       </div>
     </div>
-    <div id="debug-status" class="status"></div>
+    <div class="col">
+      <div class="card">
+        <h3>📤 分析结果</h3>
+        <div id="debug-output" class="output" style="min-height:300px;">
+          <span class="text2">👈 粘贴代码和错误信息后点击"分析错误"</span>
+        </div>
+        <div id="debug-status" class="status"></div>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- ============ 思路编程 ============ -->
+<!-- ============ 编译纠错面板 ============ -->
+<div id="panel-compile" class="panel">
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <div class="input-label"><span>📥 粘贴代码</span></div>
+        <textarea id="compile-code" placeholder="粘贴编译报错的代码..."></textarea>
+      </div>
+      <div class="card">
+        <div class="input-label"><span>📥 编译器报错信息</span></div>
+        <textarea id="compile-error" placeholder="粘贴 Arduino IDE 底部黑色区域的红色报错...
+
+例如：
+• exit status 1 — 编译失败
+• expected ';' before '}' token — 缺少分号
+• 'xxx' was not declared in this scope — 变量没定义
+• 'Serial' was not declared — 忘了写 Arduino.h 或选错板子
+• undefined reference to 'xxx' — 缺少库/函数定义" style="min-height:120px;"></textarea>
+        <div class="btn-group">
+          <button class="btn btn-primary" onclick="analyzeCompileWithAI()">🤖 AI分析编译错误</button>
+          <button class="btn btn-secondary btn-sm" onclick="loadCompileExample(1)">📋 示例1：缺分号</button>
+          <button class="btn btn-secondary btn-sm" onclick="loadCompileExample(2)">📋 示例2：变量未定义</button>
+          <button class="btn btn-secondary btn-sm" onclick="loadCompileExample(3)">📋 示例3：拼写错误</button>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card">
+        <h3>📤 AI 分析结果</h3>
+        <div id="compile-output" class="output" style="min-height:300px;">
+          <span class="text2">👈 粘贴代码和编译报错后点击"AI分析编译错误"<br><br>AI 会帮你：<br>① 定位错误在哪一行<br>② 用通俗的比喻解释为什么出错<br>③ 给出修改后的正确代码<br>④ 教你怎么避免这类错误</span>
+        </div>
+        <div id="compile-status" class="status"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 思路编程面板 ============ -->
 <div id="panel-generate" class="panel">
-  <div class="card">
-    <div class="input-label"><span>💬 想做什么？</span></div>
-    <textarea id="generate-idea" placeholder="用日常语言描述...&#10;&#10;例如：&#10;• 让LED每隔1秒闪烁&#10;• 按下按钮LED亮，松开灭&#10;• 超声波测距显示在串口"></textarea>
-    <div class="btn-group">
-      <button class="btn btn-primary btn-block" onclick="generateCode()">💡 生成代码</button>
-      <button class="btn btn-secondary btn-block" onclick="generateWithAI()">💬 求助豆豆生成</button>
-    </div>
-  </div>
-  <div class="card">
-    <h3>📋 常用模板（点一下填充）</h3>
-    <div class="template-grid" id="template-grid"></div>
-  </div>
-  <div class="card">
-    <h3>📤 生成的代码</h3>
-    <div id="generate-output" style="min-height:120px;">
-      <div class="welcome">
-        <div class="icon">💡</div>
-        <p>描述想做的事情<br>或点击上方模板</p>
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <div class="input-label"><span>💬 学生想做什么？（用自然语言描述）</span></div>
+        <textarea id="generate-idea" placeholder="用日常语言描述学生想要实现的功能...
+
+例如：
+• 我想让一个LED灯每隔1秒闪烁一下
+• 我想按下按钮的时候，LED灯亮，松开就灭
+• 我想用超声波传感器测距离，然后显示在串口监视器上
+• 我想让舵机从0度慢慢转到180度再转回来
+• 我想用两个按钮控制LED，一个开一个关"></textarea>
+        <div class="btn-group">
+          <button class="btn btn-primary" onclick="generateCode()">💡 生成代码</button>
+          <button class="btn btn-secondary" onclick="generateWithAI()">🤖 AI智能生成</button>
+        </div>
+      </div>
+      <div class="card">
+        <h3>📋 常用模板（点击快速填充）</h3>
+        <div class="template-grid" id="template-grid"></div>
       </div>
     </div>
-    <div id="generate-status" class="status"></div>
-    <div class="btn-group" id="generate-actions" style="display:none;">
-      <button class="btn btn-primary btn-sm" onclick="copyGeneratedCode()">📋 复制</button>
-      <button class="btn btn-secondary btn-sm" onclick="explainGeneratedCode()">🔍 解读</button>
+    <div class="col">
+      <div class="card">
+        <h3>📤 生成的代码</h3>
+        <div id="generate-output" class="output" style="min-height:300px; font-family: 'Cascadia Code','Consolas',monospace;">
+          <span class="text2">👈 描述你想做的事情，或点击下方模板</span>
+        </div>
+        <div id="generate-status" class="status"></div>
+        <div class="btn-group" id="generate-actions" style="display:none;">
+          <button class="btn btn-primary btn-sm" onclick="copyGeneratedCode()">📋 复制代码</button>
+          <button class="btn btn-secondary btn-sm" onclick="explainGeneratedCode()">🔍 解读这段代码</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- ============ 速查手册 ============ -->
+<!-- ============ 速查手册面板 ============ -->
 <div id="panel-learn" class="panel">
   <div class="card">
-    <h3>📚 Arduino / ESP32 函数速查</h3>
-    <div id="quickref-content"></div>
+    <h3>📚 Arduino / ESP32 常用函数速查</h3>
+    <div id="quickref-content" class="output" style="max-height:600px; overflow-y:auto;"></div>
   </div>
 </div>
 
-<!-- API 配置 -->
+<!-- API 配置（折叠） -->
 <div class="card" style="margin-top:8px;">
-  <button class="btn btn-secondary btn-sm btn-block" onclick="toggleAPIConfig()">⚙️ AI增强设置</button>
+  <button class="btn btn-secondary btn-sm" onclick="toggleAPIConfig()">⚙️ AI增强设置</button>
   <div class="api-config" id="api-config">
-    <p style="color:var(--text2); font-size:12px; margin:8px 0;">
-      已预置 DeepSeek API，开箱即用。也可更换其他兼容接口。
+    <p style="color:var(--text2); font-size:var(--font-sm); margin:8px 0;">
+      配置 OpenAI 兼容 API 以启用 AI 深度分析功能（可选）。<br>
+      支持 DeepSeek、OpenAI、或其他兼容接口。<br>
+      <strong>不配置也能使用内置规则引擎！</strong> API 仅提供更智能的分析。
     </p>
-    <label style="font-size:12px; color:var(--text2);">API 地址</label>
-    <input type="text" id="api-url">
-    <label style="font-size:12px; color:var(--text2);">API Key</label>
-    <input type="password" id="api-key">
-    <label style="font-size:12px; color:var(--text2);">模型名</label>
-    <input type="text" id="api-model">
-    <button class="btn btn-primary btn-sm btn-block" onclick="saveAPIConfig()" style="margin-top:8px;">💾 保存</button>
+    <div class="config-row">
+      <div style="flex:1">
+        <label style="font-size:var(--font-sm); color:var(--text2);">API 地址</label>
+        <input type="text" id="api-url" placeholder="https://api.deepseek.com/v1/chat/completions">
+      </div>
+      <div style="flex:1">
+        <label style="font-size:var(--font-sm); color:var(--text2);">API Key</label>
+        <input type="password" id="api-key" placeholder="sk-...">
+      </div>
+      <div style="flex:0 0 auto">
+        <label style="font-size:var(--font-sm); color:var(--text2);">模型名</label>
+        <input type="text" id="api-model" placeholder="deepseek-chat" style="width:180px;">
+      </div>
+    </div>
+    <button class="btn btn-primary btn-sm" onclick="saveAPIConfig()" style="margin-top:10px;">💾 保存配置</button>
+    <span id="api-status" style="font-size:var(--font-sm); margin-left:10px; color:var(--green);"></span>
   </div>
 </div>
 
-</div>
 
-<!-- 底部导航栏 -->
-<nav class="bottom-nav">
-  <button class="nav-item active" onclick="switchTab('explain')">
-    <span class="nav-icon">📖</span> 代码解读
-  </button>
-  <button class="nav-item" onclick="switchTab('debug')">
-    <span class="nav-icon">🔍</span> 错误分析
-  </button>
-  <button class="nav-item" onclick="switchTab('generate')">
-    <span class="nav-icon">💡</span> 思路编程
-  </button>
-  <button class="nav-item" onclick="switchTab('learn')">
-    <span class="nav-icon">📚</span> 速查
-  </button>
-</nav>
+<div id="panel-hardware" class="panel">
+  <div class="card">
+    <h3>🔌 开发板选择</h3>
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <select id="hw-board-select" onchange="onHwBoardChange()" style="padding:8px 14px;background:#0d1117;border:1px solid #30363d;border-radius:8px;color:#e0e0e0;font-size:15px;font-family:inherit;cursor:pointer;min-width:300px">
+        <option value="arduino-uno">Arduino Uno (ATmega328P / 5V)</option>
+        <option value="arduino-nano">Arduino Nano (ATmega328P / 5V)</option>
+        <option value="arduino-mega">Arduino Mega 2560 (ATmega2560 / 5V)</option>
+        <option value="esp32-devkit">ESP32 DevKit V1 (3.3V / WiFi+BLE)</option>
+        <option value="esp8266-nodemcu">ESP8266 NodeMCU (3.3V / WiFi)</option>
+      </select>
+      <span id="hw-board-info" style="font-size:13px;color:#a0a0b0"></span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="card"><h3>📋 选择项目</h3><div class="template-grid" id="hw-template-grid"></div></div>
+      <div class="card"><h3>🛒 元器件清单</h3><div id="hw-bom" class="output" style="min-height:120px"><span class="text2">👈 选择项目查看</span></div></div>
+    </div>
+    <div class="col">
+      <div class="card"><h3>🔗 引脚连接表</h3><div id="hw-connections" class="output" style="min-height:150px"><span class="text2">👈 选择项目查看</span></div></div>
+      <div class="card"><h3>🖼 接线示意图</h3><div id="hw-diagram" style="min-height:280px;display:flex;align-items:center;justify-content:center"><span class="text2">👈 选择项目查看</span></div></div>
+    </div>
+  </div>
+</div>
+</div>
 
 <script>
-// ==================== 底部导航 ====================
-function switchTab(name) {
-  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  // 找到对应 nav-item
-  const items = document.querySelectorAll('.nav-item');
-  const panels = ['explain', 'debug', 'generate', 'learn'];
-  const idx = panels.indexOf(name);
-  if (idx >= 0 && items[idx]) items[idx].classList.add('active');
-  const panel = document.getElementById(`panel-${name}`);
-  if (panel) panel.classList.add('active');
-  window.scrollTo(0, 0);
-}
+// ==================== 应用核心 ====================
 
 // 当前生成的代码缓存
 let currentGeneratedCode = '';
 
-// ==================== Arduino 知识库 ====================
+// ==================== Tab 切换 ====================
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`[onclick="switchTab('${name}')"]`).classList.add('active');
+  document.getElementById(`panel-${name}`).classList.add('active');
+}
+
+// ==================== 代码解读 ====================
+
+// Arduino 函数知识库
 const ARDUINO_DOC = {
-  'pinMode': { desc: '设置引脚模式', params: '引脚号, 模式(INPUT/OUTPUT/INPUT_PULLUP)', detail: '使用数字引脚前必须先设置模式。就像告诉一扇门是让人进来还是出去。', example: 'pinMode(13, OUTPUT);' },
-  'digitalWrite': { desc: '数字引脚写高/低电平', params: '引脚号, HIGH/LOW', detail: '给引脚输出高电平(开)或低电平(关)。HIGH=开灯，LOW=关灯。', example: 'digitalWrite(13, HIGH);' },
-  'digitalRead': { desc: '读取数字引脚电平', params: '引脚号', detail: '读取引脚状态，返回 HIGH 或 LOW。就像问门铃：有人按了吗？', example: 'int v = digitalRead(3);' },
-  'analogWrite': { desc: '模拟输出(PWM)', params: '引脚号, 值(0-255)', detail: '输出模拟信号。0=全关，255=全开。⚠️ ESP32请用 ledcWrite！', example: 'analogWrite(9, 128);', note: '⚠️ ESP32用ledcWrite' },
-  'analogRead': { desc: '模拟读取(ADC)', params: '引脚号', detail: '读取模拟传感器电压值。Arduino返回0-1023，ESP32返回0-4095。', example: 'int v = analogRead(A0);' },
-  'delay': { desc: '延时等待', params: '毫秒数', detail: '暂停程序指定毫秒（1000毫秒=1秒）。会阻塞程序，进阶用millis()。', example: 'delay(1000);' },
-  'Serial.begin': { desc: '初始化串口', params: '波特率(9600/115200)', detail: '启动串口通信。波特率是说话速度，两边要一致。', example: 'Serial.begin(115200);' },
-  'Serial.println': { desc: '串口打印换行', params: '内容', detail: '把数据发到电脑串口监视器。就像给电脑发消息。', example: 'Serial.println("Hello!");' },
-  'Serial.print': { desc: '串口打印不换行', params: '内容', detail: '类似println但不换行，后面的内容接在后面。', example: 'Serial.print("X:");' },
-  'millis': { desc: '获取运行时间(毫秒)', params: '无', detail: '返回程序启动到现在的毫秒数。常用于非阻塞定时。', example: 'unsigned long t = millis();' },
-  'tone': { desc: '蜂鸣器发声', params: '引脚, 频率(Hz), 时长(ms)', detail: '让蜂鸣器发出指定频率声音。频率越高音调越高。', example: 'tone(8, 440, 500);' },
-  'map': { desc: '数值映射', params: '输入, 输入最小, 输入最大, 输出最小, 输出最大', detail: '按比例映射数值范围。如把0-1023映射到0-180度。', example: 'int a = map(v, 0, 1023, 0, 180);' },
-  'constrain': { desc: '数值约束', params: '值, 最小, 最大', detail: '确保数值不超出范围。太小取最小值，太大取最大值。', example: 'int s = constrain(v, 0, 255);' },
-  'ledcSetup': { desc: 'ESP32 PWM配置', params: '通道, 频率, 分辨率', detail: 'ESP32设置PWM。先配置再绑引脚再输出。', example: 'ledcSetup(0,5000,8);', note: '仅ESP32' },
-  'ledcWrite': { desc: 'ESP32 PWM输出', params: '通道, 值(0-255)', detail: 'ESP32的PWM输出，代替Arduino的analogWrite。', example: 'ledcWrite(0, 200);', note: '仅ESP32' },
-  'WiFi.begin': { desc: '连接WiFi', params: 'SSID, 密码', detail: '让ESP32连接WiFi网络。', example: 'WiFi.begin("name","pwd");', note: '仅ESP32' },
-  'random': { desc: '生成随机数', params: '最小, 最大', detail: '生成随机数。最小值包含，最大值不包含。', example: 'int r = random(1,7);' },
-  'abs': { desc: '取绝对值', params: '数值', detail: '负数变正数。', example: 'int d = abs(-5);' },
-  'sizeof': { desc: '变量大小(字节)', params: '变量/类型', detail: '返回变量占用的字节数。', example: 'int s = sizeof(int);' },
+  'pinMode': { desc: '设置引脚模式', params: '引脚号, 模式(INPUT/OUTPUT/INPUT_PULLUP)', detail: '在使用数字引脚之前，必须先用 pinMode 告诉 Arduino 这个引脚是输入还是输出。就像告诉一个门：是让人进来（输入）还是出去（输出）。', example: 'pinMode(13, OUTPUT); // 把引脚13设为输出' },
+  'digitalWrite': { desc: '数字引脚写高/低电平', params: '引脚号, HIGH/LOW', detail: '给指定引脚输出高电平(HIGH=3.3V/5V)或低电平(LOW=0V)。HIGH就像开灯，LOW就像关灯。', example: 'digitalWrite(13, HIGH); // 点亮LED' },
+  'digitalRead': { desc: '读取数字引脚电平', params: '引脚号', detail: '读取引脚当前的电压状态，返回 HIGH(1) 或 LOW(0)。就像问门铃：有人按了吗？', example: 'int val = digitalRead(3); // 读取按钮状态' },
+  'analogWrite': { desc: '模拟输出(PWM)', params: '引脚号, 值(0-255)', detail: '输出模拟信号(PWM方波)。0是完全关，255是完全开，127是半亮。就像调光灯的旋钮。注意：ESP32的PWM用ledcWrite代替！', example: 'analogWrite(9, 128); // LED半亮', note: '⚠️ ESP32请使用 ledcWrite' },
+  'analogRead': { desc: '模拟读取(ADC)', params: '引脚号', detail: '读取模拟传感器的电压值，返回 0-1023（Arduino）或 0-4095（ESP32）。就像温度计读数。', example: 'int val = analogRead(A0); // 读取电位器' },
+  'delay': { desc: '延时等待', params: '毫秒数', detail: '让程序暂停指定的毫秒数（1000毫秒=1秒）。在这期间什么也不做。注意：delay会阻塞程序，进阶用法用millis()！', example: 'delay(1000); // 等待1秒' },
+  'Serial.begin': { desc: '初始化串口通信', params: '波特率(如9600/115200)', detail: '启动串口通信，让Arduino能和电脑对话。波特率是说话的速度，两边要一致才能听懂。', example: 'Serial.begin(115200);' },
+  'Serial.println': { desc: '串口打印并换行', params: '要打印的内容', detail: '把数据通过串口发送到电脑，在串口监视器里可以看到。就像给电脑发一条消息。', example: 'Serial.println("Hello!");' },
+  'Serial.print': { desc: '串口打印不换行', params: '要打印的内容', detail: '和println类似，但打印完后不换行，后面的内容会接在后面。', example: 'Serial.print("X:"); Serial.println(x);' },
+  'millis': { desc: '获取运行时间', params: '无', detail: '返回程序从启动到现在的毫秒数。常用于代替delay()做非阻塞定时。就像跑表的读数。', example: 'unsigned long t = millis();' },
+  'attachInterrupt': { desc: '绑定硬件中断', params: '引脚, 函数, 触发模式', detail: '当指定引脚发生电平变化时，立即跳去执行某个函数。就像门铃响了马上去开门，不管在做什么。', example: 'attachInterrupt(0, myFunc, RISING);' },
+  'ledcSetup': { desc: 'ESP32 PWM配置', params: '通道, 频率, 分辨率', detail: 'ESP32设置PWM的专用函数。需要先配置通道，再用ledcAttachPin绑定引脚，最后用ledcWrite输出。', example: 'ledcSetup(0, 5000, 8); ledcAttachPin(2, 0); ledcWrite(0, 128);', note: '仅ESP32' },
+  'ledcWrite': { desc: 'ESP32 PWM输出', params: '通道, 值(0-255)', detail: 'ESP32的PWM输出函数，相当于Arduino的analogWrite。', example: 'ledcWrite(0, 200);', note: '仅ESP32' },
+  'WiFi.begin': { desc: '连接WiFi', params: 'SSID, 密码', detail: '让ESP32连接到WiFi网络。就像手机连接WiFi一样。', example: 'WiFi.begin("MyWiFi", "password");', note: '仅ESP32' },
+  'tone': { desc: '蜂鸣器发声', params: '引脚, 频率(Hz), 时长(ms)', detail: '让蜂鸣器发出指定频率的声音。频率越高音调越高。', example: 'tone(8, 440, 500); // 440Hz响0.5秒' },
+  'map': { desc: '数值映射', params: '输入值, 输入最小, 输入最大, 输出最小, 输出最大', detail: '把一个范围内的数值按比例映射到另一个范围。就像把0-1023的传感器读数映射到0-180度的舵机角度。', example: 'int angle = map(val, 0, 1023, 0, 180);' },
+  'constrain': { desc: '数值约束', params: '值, 最小值, 最大值', detail: '确保一个数值不超过范围。如果太小就取最小值，太大就取最大值。', example: 'int safe = constrain(val, 0, 255);' },
+  'abs': { desc: '取绝对值', params: '数值', detail: '返回数值的绝对值（负数变正数）。', example: 'int d = abs(-5); // d=5' },
+  'random': { desc: '随机数', params: '最小值, 最大值', detail: '生成一个随机数。最小值包含，最大值不包含。', example: 'int r = random(1, 7); // 1-6的随机数' },
+  'sizeof': { desc: '获取变量大小', params: '变量/类型', detail: '返回变量或类型占用的字节数。', example: 'int s = sizeof(int); // s=2' },
+  'strlen': { desc: '字符串长度', params: '字符数组', detail: '返回字符串的字符个数（不含结尾）。', example: 'int len = strlen("hello"); // len=5' },
+  'itoa': { desc: '整数转字符串', params: '整数, 字符数组, 进制', detail: '把整数转成字符串形式。', example: 'char buf[10]; itoa(42, buf, 10); // "42"' },
 };
 
 const ARDUINO_TYPES = {
-  'int': '整数，-32768~32767',
-  'long': '长整数',
-  'float': '小数（浮点数）',
-  'char': '单个字符，如\'A\'',
-  'byte': '字节，0~255',
-  'bool': '布尔值，true/false',
-  'String': '字符串（一段文字）',
-  'void': '空类型（函数不返回值）',
-  'unsigned': '无符号（只存正数）',
+  'int': '整数类型，范围 -32768 到 32767（Arduino Uno），ESP32上范围更大',
+  'long': '长整数，范围更大',
+  'float': '小数（浮点数），可以存带小数点的数字',
+  'double': '双精度浮点数，精度比float更高',
+  'char': '单个字符，如 \'A\'',
+  'byte': '字节类型，范围 0-255',
+  'bool': '布尔值，只有 true 或 false',
+  'String': '字符串类，可以放一段文字',
+  'void': '空类型，表示函数不返回任何值',
+  'unsigned': '无符号类型，只能存正数和0',
+  'const': '常量修饰符，值设定后不能再改',
+  '#define': '宏定义，给一个名字赋一个固定值',
 };
 
 const ARDUINO_STRUCTURE = {
-  'void setup()': '初始化函数 — 开机只执行一次',
-  'void loop()': '主循环 — 不断重复执行',
-  'if': '条件判断：如果成立就执行',
-  'else': '否则：if不成立时执行',
-  'for': '循环：重复指定次数',
-  'while': '循环：条件成立就重复',
+  'setup': '初始化函数，程序开始只运行一次。在这里设置引脚模式、串口等。就像上课前准备文具。',
+  'loop': '主循环函数，setup之后不断重复运行。所有要反复做的事都放这里。就像上课的节奏，一遍遍重复。',
+  'if': '条件判断：如果条件成立就执行。就像"如果下雨就带伞"。',
+  'else': '否则：if条件不成立时执行。就像"否则就不带伞"。',
+  'for': '循环：重复执行指定次数。就像"拍10下手"。语法：for(初始化; 条件; 变化) { }',
+  'while': '循环：条件成立就一直重复。就像"作业没写完就一直写"。',
+  'switch': '多分支选择：根据值跳到不同的代码运行。',
+  'return': '返回：从函数中返回一个值并结束函数。',
+  'void setup()': '📌 初始化函数 — 开机只执行一次，放设置类代码',
+  'void loop()': '📌 主循环 — 不断重复执行的代码放这里',
 };
 
-// ==================== 代码解读 ====================
 function explainCode() {
   const code = document.getElementById('explain-input').value.trim();
   const output = document.getElementById('explain-output');
   if (!code) { output.innerHTML = '<span class="warn">⚠️ 请先粘贴代码</span>'; return; }
 
   const lines = code.split('\n');
-  let html = `<div style="margin-bottom:8px;" class="success">📖 共 ${lines.length} 行，逐行解读：</div>`;
+  let html = '<div style="font-size:16px; line-height:2;">';
+  html += '<div class="success" style="margin-bottom:12px;">📖 共 ' + lines.length + ' 行代码，逐行解读如下：</div>';
 
+  let indentLevel = 0;
   for (let i = 0; i < lines.length; i++) {
-    const trimmed = lines[i].trim();
-    if (!trimmed) { html += '<div style="height:6px;"></div>'; continue; }
+    const raw = lines[i];
+    const trimmed = raw.trim();
+    const indent = raw.search(/\S/);
+    if (indent > 0) indentLevel = Math.floor(indent / 2);
 
-    // 注释
-    if (trimmed.startsWith('//') || trimmed.startsWith('/*') || trimmed.startsWith('*')) {
-      html += `<div><span class="line-num">${i+1}</span><span class="hl-cmt">💬 ${escapeHtml(trimmed)}</span></div>`;
+    if (!trimmed) {
+      html += `<div style="height:8px;"></div>`;
+      continue;
+    }
+
+    // 注释行
+    if (trimmed.startsWith('//')) {
+      html += `<div style="margin-left:${indentLevel*12}px;"><span class="line-num">${i+1}</span><span class="comment">💬 ${escapeHtml(trimmed)}</span></div>`;
+      continue;
+    }
+    if (trimmed.startsWith('/*') || trimmed.startsWith('*')) {
+      html += `<div style="margin-left:${indentLevel*12}px;"><span class="line-num">${i+1}</span><span class="comment">💬 ${escapeHtml(trimmed)}</span></div>`;
       continue;
     }
 
     // 预处理
     if (trimmed.startsWith('#')) {
-      html += `<div><span class="line-num">${i+1}</span><span class="hl-macro">${escapeHtml(trimmed)}</span></div>`;
+      const macroMatch = trimmed.match(/#(define|include|ifdef|ifndef|endif)\s+(.+)/);
+      html += `<div style="margin-left:${indentLevel*12}px;"><span class="line-num">${i+1}</span><span class="hl-macro">${escapeHtml(trimmed)}</span>`;
+      if (macroMatch) {
+        const dir = macroMatch[1];
+        if (dir === 'include') html += ` <span class="explain">← 引入库文件 ${macroMatch[2]}</span>`;
+        else if (dir === 'define') html += ` <span class="explain">← 定义常量 ${macroMatch[2]}</span>`;
+      }
+      html += '</div>';
       continue;
     }
 
-    let found = '';
-    // 类型
-    for (const [t, d] of Object.entries(ARDUINO_TYPES)) {
-      if (trimmed.includes(t + ' ') || trimmed.startsWith(t + ' ')) {
-        const m = trimmed.match(new RegExp(t + '\\s+(\\w+)'));
-        if (m) found = `<span class="explain">← ${t}变量 <b>${m[1]}</b></span>`;
+    // 类型声明
+    let foundExplain = '';
+    for (const [typeName, typeDesc] of Object.entries(ARDUINO_TYPES)) {
+      if (trimmed.includes(typeName + ' ') || trimmed.startsWith(typeName + ' ')) {
+        const varMatch = trimmed.match(new RegExp(typeName + '\\s+(\\w+)'));
+        if (varMatch) foundExplain = `<span class="explain">← 声明${typeName}类型变量 <b>${varMatch[1]}</b>（${typeDesc.split('，')[0]}）</span>`;
       }
-    }
-    // 结构
-    for (const [k, d] of Object.entries(ARDUINO_STRUCTURE)) {
-      if (trimmed.includes(k.replace('()','')) || trimmed.startsWith(k.split(' ')[0])) {
-        if (!found) found = `<span class="explain">← ${d}</span>`;
-      }
-    }
-    // 函数
-    for (const [fn, doc] of Object.entries(ARDUINO_DOC)) {
-      if (trimmed.includes(fn + '(')) { found = `<span class="explain">← ${doc.desc}</span>`; break; }
-    }
-    // 赋值
-    if (!found && trimmed.includes('=') && !trimmed.includes('==') && !trimmed.includes('!=')) {
-      const m = trimmed.match(/^(\w+)\s*=/);
-      if (m) found = `<span class="explain">← 给 <b>${m[1]}</b> 赋值</span>`;
     }
 
-    html += `<div><span class="line-num">${i+1}</span>${highlightLine(trimmed)}${found}</div>`;
+    // 结构关键词
+    for (const [kw, desc] of Object.entries(ARDUINO_STRUCTURE)) {
+      if (trimmed.startsWith(kw) || trimmed.includes(' ' + kw + ' ') || trimmed.includes('(' + kw + ')') || trimmed.includes(kw + '(')) {
+        if (!foundExplain) foundExplain = `<span class="explain">← ${desc}</span>`;
+      }
+    }
+
+    // 函数调用
+    for (const [fn, doc] of Object.entries(ARDUINO_DOC)) {
+      if (trimmed.includes(fn + '(') || trimmed.includes(fn + ' (')) {
+        foundExplain = `<span class="explain">← ${doc.desc} | ${doc.detail}</span>`;
+        break;
+      }
+    }
+
+    // 变量赋值检测
+    if (!foundExplain && trimmed.includes('=') && !trimmed.includes('==') && !trimmed.includes('!=') && !trimmed.includes('<=') && !trimmed.includes('>=')) {
+      const assignMatch = trimmed.match(/^(\w+)\s*=/);
+      if (assignMatch) foundExplain = `<span class="explain">← 给变量 <b>${assignMatch[1]}</b> 赋值</span>`;
+    }
+
+    html += `<div style="margin-left:${indentLevel*12}px;"><span class="line-num">${i+1}</span>${highlightLine(trimmed)}${foundExplain}</div>`;
   }
 
   // 整体评估
-  const full = code.toLowerCase();
-  html += '<div style="margin-top:12px;padding:12px;background:#1a2a1a;border-radius:8px;font-size:13px;">';
-  html += '<div class="success" style="margin-bottom:6px;">📊 整体分析：</div>';
-  html += full.includes('void setup') && full.includes('void loop') ? '<div>✅ 有 setup + loop</div>' : '<div class="warn">⚠️ 缺少 setup 或 loop</div>';
-  html += full.includes('pinmode') ? '<div>✅ 有引脚设置</div>' : '<div class="warn">⚠️ 未设置引脚模式</div>';
-  html += full.includes('serial.begin') ? '<div>✅ 串口已初始化</div>' : '';
-  html += full.includes('delay(') ? '<div>💡 用了delay() — 注意会阻塞</div>' : '';
+  html += '<div style="margin-top:16px; padding:12px; background:#1a2a1a; border-radius:8px;">';
+  html += '<div class="success">📊 <b>整体分析：</b></div>';
+
+  const fullCode = code.toLowerCase();
+  if (fullCode.includes('void setup') && fullCode.includes('void loop')) {
+    html += '<div>✅ 程序结构完整（有 setup 和 loop）</div>';
+  } else if (!fullCode.includes('void setup')) {
+    html += '<div class="warn">⚠️ 缺少 <b>void setup()</b> 函数 — 需要初始化引脚和串口</div>';
+  } else if (!fullCode.includes('void loop')) {
+    html += '<div class="warn">⚠️ 缺少 <b>void loop()</b> 函数 — 需要主循环逻辑</div>';
+  }
+
+  if (fullCode.includes('pinmode')) html += '<div>✅ 有引脚模式设置</div>';
+  else html += '<div class="warn">⚠️ 未发现 pinMode 调用 — 使用数字引脚前需要设置模式</div>';
+
+  if (fullCode.includes('serial.begin')) html += '<div>✅ 已初始化串口通信</div>';
+  if (fullCode.includes('delay(')) html += '<div>💡 使用了 delay() 延时 — 注意这会阻塞程序，进阶可改用 millis()</div>';
+  if (fullCode.includes('digitalwrite') || fullCode.includes('digitalread') || fullCode.includes('analogwrite') || fullCode.includes('analogread')) {
+    html += '<div>✅ 使用了 I/O 操作函数</div>';
+  }
+
+  // 检测ESP32特征
+  if (fullCode.includes('ledc') || fullCode.includes('wifi') || fullCode.includes('bluetooth')) {
+    html += '<div class="info">🔌 检测到 ESP32 特有功能</div>';
+  }
+
   html += '</div>';
+  html += '</div>';
+
   output.innerHTML = html;
 }
 
 function highlightLine(line) {
+  // 简单语法高亮
   let hl = escapeHtml(line);
+  // 字符串
   hl = hl.replace(/"([^"]*)"/g, '<span class="hl-str">"$1"</span>');
+  // 注释（已在前面处理，这里处理行尾注释）
   hl = hl.replace(/(\/\/.*$)/g, '<span class="hl-cmt">$1</span>');
-  const kws = ['void','int','float','char','bool','byte','long','unsigned','const','return','if','else','for','while','true','false','HIGH','LOW','INPUT','OUTPUT'];
-  for (const kw of kws) hl = hl.replace(new RegExp('\\b'+kw+'\\b','g'),`<span class="hl-kw">${kw}</span>`);
+  // 关键字
+  const kws = ['void','int','float','double','char','bool','byte','long','unsigned','const','static','return','if','else','for','while','do','switch','case','break','continue','true','false','HIGH','LOW','INPUT','OUTPUT','INPUT_PULLUP'];
+  for (const kw of kws) {
+    hl = hl.replace(new RegExp('\\b' + kw + '\\b', 'g'), `<span class="hl-kw">${kw}</span>`);
+  }
+  // 数字
   hl = hl.replace(/\b(\d+)\b/g, '<span class="hl-num">$1</span>');
   return hl;
 }
 
-function escapeHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escapeHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
 
 // ==================== 错误分析 ====================
+
+// 错误检测规则
 const ERROR_PATTERNS = [
-  { name:'缺少分号', check:(c)=>{const r=[];c.split('\n').forEach((l,i)=>{const t=l.trim();if(t&&!/[;{}]$/.test(t)&&!/^(\/\/|#|\*|\/\*)/.test(t)&&/\w/.test(t)&&!t.includes('{')&&!t.includes('}'))r.push({line:i+1,msg:'可能缺少分号 <b>;</b>'});});return r;}, fix:'语句末尾加 <b>;</b>' },
-  { name:'未设引脚模式', check:(c)=>{if((c.includes('digitalWrite')||c.includes('digitalRead'))&&!c.includes('pinMode'))return[{line:1,msg:'使用I/O但没<b>pinMode()</b>'}];return[];}, fix:'setup()里加 pinMode(引脚, OUTPUT/INPUT);' },
-  { name:'缺少setup/loop', check:(c)=>{const r=[];if(!c.includes('void setup'))r.push({line:1,msg:'缺少<b>void setup()</b>'});if(!c.includes('void loop'))r.push({line:1,msg:'缺少<b>void loop()</b>'});return r;}, fix:'Arduino程序必须有setup()和loop()' },
-  { name:'括号不匹配', check:(c)=>{let o=0;for(const ch of c){if(ch==='{')o++;if(ch==='}')o--;}if(o!==0)return[{line:1,msg:`大括号不匹配(多${o>0?o:Math.abs(o)}个${o>0?'{':'}'})`}];return[];}, fix:'确保每个{有对应}' },
-  { name:'圆括号不匹配', check:(c)=>{let o=0;for(const ch of c){if(ch==='(')o++;if(ch===')')o--;}if(o!==0)return[{line:1,msg:`圆括号不匹配(多${o>0?o:Math.abs(o)}个${o>0?'(':')'})`}];return[];}, fix:'确保每个(有对应)' },
-  { name:'digitalWrite值错误', check:(c)=>{const r=[];const re=/digitalWrite\s*\([^,]+,\s*(\d+)\s*\)/g;let m;while((m=re.exec(c))!==null){if(m[1]!=='0'&&m[1]!=='1')r.push({line:0,msg:`digitalWrite参数应为HIGH/LOW，不是${m[1]}`});}return r;}, fix:'digitalWrite只用HIGH(开)或LOW(关)' },
-  { name:'ESP32用错PWM', check:(c)=>{if(c.includes('analogWrite')&&(c.includes('ledc')||c.includes('ESP32')||c.includes('esp32')))return[{line:0,msg:'⚠️ ESP32不支持analogWrite，用ledcWrite'}];return[];}, fix:'用ledcSetup+ledcAttachPin+ledcWrite' },
-  { name:'Serial未初始化', check:(c)=>{if((c.includes('Serial.print')||c.includes('Serial.println'))&&!c.includes('Serial.begin'))return[{line:0,msg:'用了串口但没<b>Serial.begin()</b>'}];return[];}, fix:'setup()里加Serial.begin(115200);' },
-  { name:'if里用=不是==', check:(c)=>{const r=[];c.split('\n').forEach((l,i)=>{if(l.includes('if')&&l.match(/if\s*\([^=]*=[^=]/)&&!l.includes('==')&&!l.includes('!=')&&!l.includes('<')&&!l.includes('>'))r.push({line:i+1,msg:'if里用了<b>=</b>(赋值)，应该是<b>==</b>(比较)'});});return r;}, fix:'等于比较用==，赋值用=' },
-  { name:'缺少库引用', check:(c)=>{const r=[];const n={Servo:'#include <Servo.h>',LiquidCrystal:'#include <LiquidCrystal.h>',WiFi:'#include <WiFi.h>'};for(const[k,v]of Object.entries(n)){if(c.includes(k)&&!c.includes('#include'))r.push({line:0,msg:`用了<b>${k}</b>但没包含库：${v}`});}return r;}, fix:'代码开头加#include <库名.h>' },
+  {
+    name: '缺少分号',
+    pattern: /^[^#/\s].*[^;{}]\s*$/m,
+    check: (code) => {
+      const lines = code.split('\n');
+      const errors = [];
+      for (let i = 0; i < lines.length; i++) {
+        const t = lines[i].trim();
+        if (t && !t.endsWith(';') && !t.endsWith('{') && !t.endsWith('}') && !t.startsWith('//') && !t.startsWith('#') && !t.startsWith('/*') && !t.startsWith('*') && !t.includes('{') && !t.includes('}')) {
+          if (/\w/.test(t)) errors.push({ line: i+1, text: t, msg: '这行可能缺少分号 <b>;</b>' });
+        }
+      }
+      return errors;
+    },
+    fix: '在语句末尾加上分号 <b>;</b>'
+  },
+  {
+    name: '未设置引脚模式',
+    check: (code) => {
+      const errors = [];
+      const pins = new Set();
+      const hasMode = new Set();
+      const re = /(?:digitalWrite|digitalRead|analogWrite|analogRead)\s*\(\s*(\w+)/g;
+      let m;
+      while ((m = re.exec(code)) !== null) {
+        if (isNaN(m[1])) pins.add(m[1]);
+        else pins.add('引脚' + m[1]);
+      }
+      const pm = /pinMode\s*\(\s*(\w+)/g;
+      while ((m = pm.exec(code)) !== null) {
+        hasMode.add(m[1]);
+        hasMode.add('引脚' + m[1]);
+      }
+      if (pins.size > 0 && hasMode.size === 0) {
+        errors.push({ line: 1, text: '', msg: '代码中使用了 I/O 操作但没有 <b>pinMode()</b>。在使用引脚前需要先设置模式。' });
+      }
+      return errors;
+    },
+    fix: '在 setup() 中使用 pinMode(引脚号, OUTPUT); 或 pinMode(引脚号, INPUT); 设置引脚模式'
+  },
+  {
+    name: '缺少 setup 或 loop',
+    check: (code) => {
+      const errors = [];
+      if (!code.includes('void setup')) errors.push({ line: 1, text: '', msg: '缺少 <b>void setup()</b> 函数。Arduino程序必须有 setup() 和 loop()。' });
+      if (!code.includes('void loop')) errors.push({ line: 1, text: '', msg: '缺少 <b>void loop()</b> 函数。Arduino程序必须有 setup() 和 loop()。' });
+      return errors;
+    },
+    fix: '添加 void setup() { } 和 void loop() { } 函数'
+  },
+  {
+    name: '大括号不匹配',
+    check: (code) => {
+      let open = 0;
+      for (const ch of code) {
+        if (ch === '{') open++;
+        if (ch === '}') open--;
+      }
+      if (open !== 0) return [{ line: 1, text: '', msg: `大括号不匹配：多出 <b>${open > 0 ? open + '个开括号 { ' : Math.abs(open) + '个闭括号 } '}</b>` }];
+      return [];
+    },
+    fix: '检查每个 { 是否有对应的 }，确保数量一致'
+  },
+  {
+    name: '圆括号不匹配',
+    check: (code) => {
+      let open = 0;
+      for (const ch of code) {
+        if (ch === '(') open++;
+        if (ch === ')') open--;
+      }
+      if (open !== 0) return [{ line: 1, text: '', msg: `圆括号不匹配：多出 <b>${open > 0 ? open + '个 ( ' : Math.abs(open) + '个 ) '}</b>` }];
+      return [];
+    },
+    fix: '检查每个 ( 是否有对应的 )'
+  },
+  {
+    name: '变量未声明',
+    check: (code) => {
+      const errors = [];
+      const decls = new Set();
+      const declRe = /\b(int|float|double|char|bool|byte|long|String|unsigned|const)\s+(\w+)\b/g;
+      let m;
+      while ((m = declRe.exec(code)) !== null) decls.add(m[2]);
+      // 忽略常见函数名
+      const ignore = new Set(['setup','loop','HIGH','LOW','OUTPUT','INPUT','INPUT_PULLUP','true','false','Serial','WiFi','LED_BUILTIN']);
+      const useRe = /\b(\w+)\s*=/g;
+      while ((m = useRe.exec(code)) !== null) {
+        const v = m[1];
+        if (!decls.has(v) && !ignore.has(v) && !ARDUINO_DOC[v] && !ARDUINO_STRUCTURE[v] && isNaN(v) && v.length > 1) {
+          // 只在没声明且没在声明行出现时才报告
+          const declLine = new RegExp(`\\b(int|float|char|bool|byte|long|String)\\s+${v}\\b`);
+          if (!declLine.test(code)) {
+            errors.push({ line: 0, text: v, msg: `变量 <b>${v}</b> 可能未声明就使用了。` });
+          }
+        }
+      }
+      return errors.slice(0, 5); // 最多5个
+    },
+    fix: '在使用变量之前先声明类型，如：int myVar;'
+  },
+  {
+    name: 'digitalWrite值错误',
+    check: (code) => {
+      const errors = [];
+      const re = /digitalWrite\s*\(\s*\w+\s*,\s*(\d+)\s*\)/g;
+      let m;
+      while ((m = re.exec(code)) !== null) {
+        const val = parseInt(m[1]);
+        if (val !== 0 && val !== 1 && val !== 0 && m[1] !== 'HIGH' && m[1] !== 'LOW') {
+          errors.push({ line: 0, text: m[0], msg: `digitalWrite 的第二个参数应该是 <b>HIGH</b> 或 <b>LOW</b>，当前值是 ${m[1]}` });
+        }
+      }
+      return errors;
+    },
+    fix: 'digitalWrite 只能用 HIGH(开) 或 LOW(关)'
+  },
+  {
+    name: 'ESP32 PWM方式错误',
+    check: (code) => {
+      if (code.includes('analogWrite') && (code.includes('ESP32') || code.includes('esp32') || code.includes('ledc'))) {
+        return [{ line: 0, text: '', msg: '⚠️ <b>ESP32 不支持 analogWrite()</b>！请改用 ledcSetup() + ledcAttachPin() + ledcWrite()' }];
+      }
+      return [];
+    },
+    fix: 'ESP32使用 ledcSetup(通道, 频率, 分辨率); ledcAttachPin(引脚, 通道); ledcWrite(通道, 值);'
+  },
+  {
+    name: 'Serial 未初始化',
+    check: (code) => {
+      if ((code.includes('Serial.print') || code.includes('Serial.println')) && !code.includes('Serial.begin')) {
+        return [{ line: 0, text: '', msg: '使用了串口打印但没有 <b>Serial.begin()</b> 初始化。在 setup() 中需要先设置串口。' }];
+      }
+      return [];
+    },
+    fix: '在 setup() 中添加 Serial.begin(115200);'
+  },
+  {
+    name: '比较运算用错了赋值符',
+    check: (code) => {
+      const errors = [];
+      const lines = code.split('\n');
+      for (let i = 0; i < lines.length; i++) {
+        if (lines[i].includes('if') && lines[i].match(/if\s*\([^=]*\b=\b[^=]/) && !lines[i].includes('==') && !lines[i].includes('!=') && !lines[i].includes('<') && !lines[i].includes('>')) {
+          if (!lines[i].includes('=')) continue;
+          const m = lines[i].match(/if\s*\(.*\b=\b[^=].*\)/);
+          if (m) errors.push({ line: i+1, text: lines[i].trim(), msg: 'if 条件中使用了 <b>=</b>（赋值），可能应该用 <b>==</b>（等于比较）' });
+        }
+      }
+      return errors;
+    },
+    fix: '比较两个值是否相等用 ==，赋值用 =。if (a = 3) 的意思是"把3赋给a"，不是"a等于3"。'
+  },
+  {
+    name: '忘记包含必要的库',
+    check: (code) => {
+      const errors = [];
+      const libNeeds = {
+        'Servo': '#include &lt;Servo.h&gt;',
+        'LiquidCrystal': '#include &lt;LiquidCrystal.h&gt;',
+        'DHT': '#include &lt;DHT.h&gt;',
+        'Ultrasonic': '#include &lt;Ultrasonic.h&gt;',
+        'Adafruit_Sensor': '#include &lt;Adafruit_Sensor.h&gt;',
+        'WiFi': '#include &lt;WiFi.h&gt; (ESP32)',
+        'WebServer': '#include &lt;WebServer.h&gt; (ESP32)',
+        'BLEDevice': '#include &lt;BLEDevice.h&gt; (ESP32)',
+      };
+      for (const [cls, inc] of Object.entries(libNeeds)) {
+        if (code.includes(cls) && !code.includes(`#include`) && !code.includes('include')) {
+          errors.push({ line: 0, text: cls, msg: `使用了 <b>${cls}</b> 但没有包含对应的库文件。需要在代码开头添加 ${inc}` });
+        }
+      }
+      return errors;
+    },
+    fix: '在代码最开头添加对应的 #include 语句'
+  },
 ];
 
 function analyzeErrors() {
@@ -530,159 +837,404 @@ function analyzeErrors() {
   if (!code && !errText) { output.innerHTML = '<span class="warn">⚠️ 请粘贴代码或错误信息</span>'; return; }
 
   let html = '';
-  let total = 0;
+  let allErrors = [];
+  let totalIssues = 0;
 
+  // 1. 解析编译器错误信息
   if (errText) {
-    html += '<div style="margin-bottom:8px;"><b>🔍 编译器报错：</b></div>';
-    for (const line of errText.split('\n')) {
-      const t = line.trim(); if (!t) continue;
-      const m = t.match(/(.+):(\d+):(\d+):\s*(error|warning):\s*(.+)/i);
-      if (m) {
-        html += `<div class="error-card"><div class="err-type">❌ 第${m[2]}行</div><div class="err-msg">${escapeHtml(m[5])}</div>`;
-        if (m[5].includes('not declared')) { const v=m[5].match(/'(\w+)'/); html+=`<div class="err-fix">💡 <b>${v?.[1]||'变量'}</b>未声明，检查拼写或加类型声明</div>`; }
-        else if (m[5].includes('expected')) { const e=m[5].match(/expected\s+'([^']+)'/); html+=`<div class="err-fix">💡 缺少<b>${e?.[1]||''}</b>，补上即可</div>`; }
-        html += '</div>'; total++;
+    html += '<div style="margin-bottom:12px;"><b>🔍 编译器报错分析：</b></div>';
+    const errLines = errText.split('\n');
+    for (const line of errLines) {
+      const t = line.trim();
+      if (!t) continue;
+      // Arduino 错误格式: file:line:col: error: message
+      const arduinoErr = t.match(/(.+)\.ino:(\d+):(\d+):\s*(error|warning):\s*(.+)/i);
+      if (arduinoErr) {
+        allErrors.push({ line: parseInt(arduinoErr[2]), text: arduinoErr[5], msg: arduinoErr[5], fromCompiler: true });
+        html += `<div class="error-card"><div class="err-type">❌ 第${arduinoErr[2]}行 ${arduinoErr[4]}</div><div class="err-msg">${escapeHtml(arduinoErr[5])}</div>`;
+        // 常见错误自动解释
+        if (arduinoErr[5].includes('not declared')) {
+          const varName = arduinoErr[5].match(/'(\w+)'/);
+          html += `<div class="err-fix">💡 <b>${varName ? varName[1] : '变量'}</b> 未声明。检查是否拼写错误，或忘记声明变量类型。比如：<code>int ${varName ? varName[1] : 'myVar'};</code></div>`;
+        } else if (arduinoErr[5].includes('expected')) {
+          const expected = arduinoErr[5].match(/expected\s+'([^']+)'/);
+          html += `<div class="err-fix">💡 缺少 <b>${expected ? expected[1] : '某个符号'}</b>，在该位置补上即可。</div>`;
+        } else if (arduinoErr[5].includes('redefinition')) {
+          html += `<div class="err-fix">💡 重复定义了某个东西（函数/变量）。检查是否有两个同名定义。</div>`;
+        }
+        html += `</div>`;
+        totalIssues++;
+      } else if (t.includes('error') || t.includes('Error')) {
+        html += `<div class="error-card"><div class="err-msg">${escapeHtml(t)}</div></div>`;
+        totalIssues++;
+      } else if (t.includes('warning') || t.includes('Warning')) {
+        html += `<div style="color:var(--yellow); padding:4px 0;">⚠️ ${escapeHtml(t)}</div>`;
       }
     }
   }
 
+  // 2. 内置规则检测
   if (code) {
-    html += '<div style="margin:8px 0;"><b>🔍 规则检测：</b></div>';
+    html += '<div style="margin-top:16px; margin-bottom:8px;"><b>🔍 内置规则检测：</b></div>';
     for (const rule of ERROR_PATTERNS) {
       try {
-        for (const r of rule.check(code)) {
-          html += `<div class="error-card"><div class="err-type">⚠️ ${rule.name}</div><div class="err-msg">${r.line>0?'第'+r.line+'行：':''}${r.msg}</div><div class="err-fix">💡 ${rule.fix}</div></div>`;
-          total++;
+        const results = rule.check(code);
+        for (const r of results) {
+          if (!allErrors.some(e => e.msg === r.msg)) { // 去重
+            allErrors.push(r);
+            html += `<div class="error-card"><div class="err-type">⚠️ ${rule.name}</div><div class="err-msg">${r.line > 0 ? '第' + r.line + '行：' : ''}${r.msg}</div><div class="err-fix">💡 修复建议：${rule.fix}</div></div>`;
+            totalIssues++;
+          }
         }
-      } catch(e) {}
+      } catch(e) { console.error('Rule error:', rule.name, e); }
     }
   }
 
-  if (total === 0) {
-    html += '<div class="success" style="font-size:16px;text-align:center;padding:20px;">✅ 没检测到明显错误！</div>';
+  if (totalIssues === 0) {
+    html += '<div class="success" style="font-size:18px;">✅ 太棒了！没有检测到明显错误！</div>';
+    html += '<div style="color:var(--text2); margin-top:8px;">如果仍有问题，可以试试 AI 深度分析。</div>';
   } else {
-    html = `<div style="margin-bottom:8px;">发现 <span class="error">${total}</span> 个问题：</div>` + html;
-    html += '<div style="margin-top:10px;padding:10px;background:#1a1a2a;border-radius:8px;font-size:13px;"><div class="info">💡 检查清单：</div>1️⃣ 每条语句末尾有<b>;</b>吗？ 2️⃣ 括号<b>{}</b>成对吗？ 3️⃣ 引脚设pinMode了吗？ 4️⃣ 变量声明类型了吗？ 5️⃣ 比较用<b>==</b>不是<b>=</b></div>';
+    html = `<div style="margin-bottom:12px;"><b>发现 <span class="error">${totalIssues}</span> 个问题：</b></div>` + html;
   }
+
+  // 3. 快速修复总结
+  if (totalIssues > 0) {
+    html += '<div style="margin-top:16px; padding:12px; background:#1a1a2a; border-radius:8px;">';
+    html += '<div class="info" style="margin-bottom:8px;">💡 <b>常见错误检查清单：</b></div>';
+    html += '<div>1️⃣ 每条语句末尾有分号 <b>;</b> 吗？</div>';
+    html += '<div>2️⃣ 大括号 <b>{ }</b> 成对了吗？</div>';
+    html += '<div>3️⃣ 引脚使用前 pinMode 设置了吗？</div>';
+    html += '<div>4️⃣ 变量使用前声明类型了吗？</div>';
+    html += '<div>5️⃣ 等于是 <b>==</b>，赋值是 <b>=</b>，没搞混吧？</div>';
+    if (code && (code.includes('analogWrite') || code.includes('ledc'))) {
+      html += '<div>6️⃣ ESP32用 <b>ledcWrite</b>，不是 analogWrite！</div>';
+    }
+    html += '</div>';
+  }
+
   output.innerHTML = html;
 }
 
 // ==================== 思路编程 ====================
+
+// 代码模板库
 const CODE_TEMPLATES = [
-  { icon:'💡', name:'LED闪烁', desc:'LED每隔1秒亮灭', keywords:['led','灯','闪烁','亮灭','blink'],
-    code:`// LED闪烁
+  {
+    icon: '💡', name: 'LED闪烁',
+    desc: '让LED每隔1秒亮灭',
+    keywords: ['led','灯','闪烁','亮灭','blink','发光'],
+    code: `// LED闪烁 - 让板载LED每隔1秒亮灭一次
 void setup() {
-  pinMode(LED_BUILTIN, OUTPUT);
+  pinMode(LED_BUILTIN, OUTPUT);  // 设置LED引脚为输出
 }
+
 void loop() {
-  digitalWrite(LED_BUILTIN, HIGH);
-  delay(1000);
-  digitalWrite(LED_BUILTIN, LOW);
-  delay(1000);
-}` },
-  { icon:'🔘', name:'按钮控制LED', desc:'按下亮松开灭', keywords:['按钮','按键','按下','button'],
-    code:`// 按钮控制LED
-const int btn = 2, led = 13;
+  digitalWrite(LED_BUILTIN, HIGH);  // 点亮
+  delay(1000);                       // 等待1秒
+  digitalWrite(LED_BUILTIN, LOW);   // 熄灭
+  delay(1000);                       // 等待1秒
+}`
+  },
+  {
+    icon: '🔘', name: '按钮控制LED',
+    desc: '按下按钮LED亮，松开灭',
+    keywords: ['按钮','按键','开关','按下','button','控制'],
+    code: `// 按钮控制LED - 按下亮，松开灭
+const int btnPin = 2;   // 按钮引脚
+const int ledPin = 13;  // LED引脚
+
 void setup() {
-  pinMode(btn, INPUT_PULLUP);
-  pinMode(led, OUTPUT);
+  pinMode(btnPin, INPUT_PULLUP);  // 按钮用内部上拉
+  pinMode(ledPin, OUTPUT);
 }
+
 void loop() {
-  if (digitalRead(btn) == LOW)
-    digitalWrite(led, HIGH);
-  else
-    digitalWrite(led, LOW);
-}` },
-  { icon:'📡', name:'串口打印', desc:'向电脑发消息', keywords:['串口','打印','serial','显示'],
-    code:`// 串口通信
+  int btnState = digitalRead(btnPin);
+  if (btnState == LOW) {           // 按钮按下(低电平)
+    digitalWrite(ledPin, HIGH);    // 点亮
+  } else {
+    digitalWrite(ledPin, LOW);     // 熄灭
+  }
+}`
+  },
+  {
+    icon: '📡', name: '串口打印',
+    desc: '向电脑发送消息',
+    keywords: ['串口','打印','输出','serial','println','监视器','显示'],
+    code: `// 串口通信 - 向电脑发送数据
 void setup() {
+  Serial.begin(115200);  // 启动串口
+  Serial.println("程序启动！");
+}
+
+void loop() {
+  Serial.print("运行时间: ");
+  Serial.print(millis() / 1000);
+  Serial.println(" 秒");
+  delay(1000);
+}`
+  },
+  {
+    icon: '🎵', name: '蜂鸣器发声',
+    desc: '播放不同音调的声音',
+    keywords: ['蜂鸣器','声音','tone','buzzer','音乐','唱歌','嘀嗒'],
+    code: `// 蜂鸣器发声 - 播放简单旋律
+const int buzzer = 8;  // 蜂鸣器引脚
+
+void setup() {
+  pinMode(buzzer, OUTPUT);
+}
+
+void loop() {
+  tone(buzzer, 523, 300);  // Do (523Hz) 响0.3秒
+  delay(400);
+  tone(buzzer, 587, 300);  // Re
+  delay(400);
+  tone(buzzer, 659, 300);  // Mi
+  delay(400);
+  tone(buzzer, 698, 300);  // Fa
+  delay(400);
+  tone(buzzer, 784, 300);  // Sol
+  delay(1000);
+}`
+  },
+  {
+    icon: '📏', name: '超声波测距',
+    desc: '用HC-SR04测量距离',
+    keywords: ['超声波','距离','超声','测距','HC-SR04','Ultrasonic','障碍'],
+    code: `// 超声波测距 - HC-SR04传感器
+const int trig = 9;   // 触发引脚
+const int echo = 10;  // 接收引脚
+
+void setup() {
+  pinMode(trig, OUTPUT);
+  pinMode(echo, INPUT);
   Serial.begin(115200);
-  Serial.println("启动！");
 }
+
 void loop() {
-  Serial.print("时间: ");
-  Serial.println(millis()/1000);
-  delay(1000);
-}` },
-  { icon:'🎵', name:'蜂鸣器', desc:'播放声音', keywords:['蜂鸣器','声音','tone','buzzer','响'],
-    code:`// 蜂鸣器
-const int buz = 8;
-void setup() { pinMode(buz, OUTPUT); }
-void loop() {
-  tone(buz, 523, 300); delay(400);
-  tone(buz, 587, 300); delay(400);
-  tone(buz, 659, 300); delay(1000);
-}` },
-  { icon:'📏', name:'超声波测距', desc:'HC-SR04测距离', keywords:['超声波','距离','超声','测距','障碍'],
-    code:`// HC-SR04测距
-const int trig=9, echo=10;
-void setup() {
-  pinMode(trig,OUTPUT); pinMode(echo,INPUT);
-  Serial.begin(115200);
-}
-void loop() {
-  digitalWrite(trig,LOW); delayMicroseconds(2);
-  digitalWrite(trig,HIGH); delayMicroseconds(10);
-  digitalWrite(trig,LOW);
-  long d=pulseIn(echo,HIGH)*0.034/2;
-  Serial.print("距离: "); Serial.print(d);
+  // 发送10微秒的脉冲
+  digitalWrite(trig, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trig, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trig, LOW);
+
+  // 读取回声时间
+  long duration = pulseIn(echo, HIGH);
+  float distance = duration * 0.034 / 2;  // 换算成厘米
+
+  Serial.print("距离: ");
+  Serial.print(distance);
   Serial.println(" cm");
   delay(500);
-}` },
-  { icon:'🔧', name:'舵机控制', desc:'0°到180°摆动', keywords:['舵机','servo','角度','转动'],
-    code:`#include <Servo.h>
-Servo s;
-void setup() { s.attach(9); }
-void loop() {
-  for(int a=0;a<=180;a++){ s.write(a); delay(15); }
-  for(int a=180;a>=0;a--){ s.write(a); delay(15); }
-}` },
-  { icon:'🌡️', name:'温度传感器', desc:'读温度显示', keywords:['温度','传感器','DHT','多少度'],
-    code:`// 温度读取(模拟传感器)
-const int tPin = A0;
-void setup() { Serial.begin(115200); }
-void loop() {
-  int r = analogRead(tPin);
-  float v = r * 3.3 / 4095.0;
-  float t = (v - 0.5) * 100;
-  Serial.print("温度: "); Serial.print(t);
-  Serial.println(" °C");
-  delay(1000);
-}` },
-  { icon:'🚦', name:'交通灯', desc:'红黄绿循环', keywords:['交通灯','红绿灯','红黄绿'],
-    code:`// 交通灯
-const int r=11,y=12,g=13;
+}`
+  },
+  {
+    icon: '🔧', name: '舵机控制',
+    desc: '控制舵机从0°到180°',
+    keywords: ['舵机','servo','角度','转动','旋转','电机'],
+    code: `// 舵机控制 - 来回摆动
+#include <Servo.h>
+
+Servo myServo;
+
 void setup() {
-  pinMode(r,OUTPUT);pinMode(y,OUTPUT);pinMode(g,OUTPUT);
+  myServo.attach(9);  // 舵机接在引脚9
 }
+
 void loop() {
-  digitalWrite(g,HIGH);delay(5000);digitalWrite(g,LOW);
-  for(int i=0;i<3;i++){digitalWrite(y,HIGH);delay(500);digitalWrite(y,LOW);delay(500);}
-  digitalWrite(r,HIGH);delay(5000);digitalWrite(r,LOW);
-}` },
-  { icon:'🔢', name:'计数器', desc:'按钮按一次+1', keywords:['计数','counter','加一','累加'],
-    code:`// 按钮计数器
-const int btn=2; int cnt=0,last=HIGH;
-void setup(){pinMode(btn,INPUT_PULLUP);Serial.begin(115200);}
-void loop(){
-  int s=digitalRead(btn);
-  if(last==HIGH&&s==LOW){cnt++;Serial.println(cnt);delay(50);}
-  last=s;
-}` },
-  { icon:'🌐', name:'WiFi连接', desc:'ESP32联网', keywords:['wifi','联网','连接','上网'],
-    code:`#include <WiFi.h>
+  // 从0度转到180度
+  for (int angle = 0; angle <= 180; angle++) {
+    myServo.write(angle);
+    delay(15);
+  }
+  // 从180度转回0度
+  for (int angle = 180; angle >= 0; angle--) {
+    myServo.write(angle);
+    delay(15);
+  }
+}`
+  },
+  {
+    icon: '🌡️', name: '温度传感器',
+    desc: '读取温度并串口显示',
+    keywords: ['温度','传感器','DS18B20','DHT','温湿度','thermometer'],
+    code: `// 模拟温度传感器读取（使用A0的模拟输入）
+const int tempPin = A0;
+
 void setup() {
   Serial.begin(115200);
-  WiFi.begin("WiFi名","密码");
-  while(WiFi.status()!=WL_CONNECTED){delay(500);Serial.print(".");}
-  Serial.println("已连接！");
 }
-void loop() {}` },
+
+void loop() {
+  int reading = analogRead(tempPin);
+  // 将ADC读数转换为电压
+  float voltage = reading * 3.3 / 4095.0;  // ESP32用3.3V和4095
+  // TMP36: 温度 = (电压 - 0.5) * 100
+  float tempC = (voltage - 0.5) * 100;
+  
+  Serial.print("温度: ");
+  Serial.print(tempC);
+  Serial.println(" °C");
+  delay(1000);
+}`
+  },
+  {
+    icon: '🌈', name: 'RGB灯带',
+    desc: '控制WS2812彩色灯带',
+    keywords: ['rgb','灯带','彩色','ws2812','neopixel','颜色','变换'],
+    code: `// WS2812 RGB灯带 - 彩虹效果
+#include <Adafruit_NeoPixel.h>
+
+#define PIN 6       // 灯带数据引脚
+#define NUMPIXELS 8 // LED数量
+
+Adafruit_NeoPixel strip(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
+
+void setup() {
+  strip.begin();
+  strip.show();  // 初始化全灭
+}
+
+void loop() {
+  // 彩虹效果
+  for (long firstHue = 0; firstHue < 65536; firstHue += 256) {
+    for (int i = 0; i < strip.numPixels(); i++) {
+      int hue = (firstHue + i * 65536L / strip.numPixels()) % 65536;
+      strip.setPixelColor(i, strip.gamma32(strip.ColorHSV(hue)));
+    }
+    strip.show();
+    delay(10);
+  }
+}`
+  },
+  {
+    icon: '🚦', name: '交通灯',
+    desc: '红黄绿灯循环切换',
+    keywords: ['交通灯','红绿灯','红黄绿','traffic'],
+    code: `// 交通灯模拟 - 红黄绿灯循环
+const int red = 11;
+const int yellow = 12;
+const int green = 13;
+
+void setup() {
+  pinMode(red, OUTPUT);
+  pinMode(yellow, OUTPUT);
+  pinMode(green, OUTPUT);
+}
+
+void loop() {
+  // 绿灯亮5秒
+  digitalWrite(green, HIGH);
+  delay(5000);
+  digitalWrite(green, LOW);
+  
+  // 黄灯闪3次
+  for (int i = 0; i < 3; i++) {
+    digitalWrite(yellow, HIGH);
+    delay(500);
+    digitalWrite(yellow, LOW);
+    delay(500);
+  }
+  
+  // 红灯亮5秒
+  digitalWrite(red, HIGH);
+  delay(5000);
+  digitalWrite(red, LOW);
+}`
+  },
+  {
+    icon: '📊', name: '电位器读数',
+    desc: '读取旋钮并控制LED亮度',
+    keywords: ['电位器','旋钮','可调','模拟','亮度','analog'],
+    code: `// 电位器控制LED亮度
+const int potPin = A0;   // 电位器接A0
+const int ledPin = 9;    // LED接引脚9（PWM引脚）
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(115200);
+}
+
+void loop() {
+  int potValue = analogRead(potPin);        // 读取0-1023
+  int brightness = potValue / 4;            // 转换为0-255
+  analogWrite(ledPin, brightness);
+  
+  Serial.print("旋钮: ");
+  Serial.print(potValue);
+  Serial.print("  亮度: ");
+  Serial.println(brightness);
+  delay(100);
+}`
+  },
+  {
+    icon: '🔢', name: '计数器',
+    desc: '按钮按一次数加一',
+    keywords: ['计数','counter','加一','累加','次数','统计'],
+    code: `// 按钮计数器 - 每按一次加一
+const int btnPin = 2;
+int count = 0;
+int lastState = HIGH;  // 上一次按钮状态
+
+void setup() {
+  pinMode(btnPin, INPUT_PULLUP);
+  Serial.begin(115200);
+  Serial.println("计数器启动！");
+}
+
+void loop() {
+  int btnState = digitalRead(btnPin);
+  
+  // 检测按钮按下（从高变低）
+  if (lastState == HIGH && btnState == LOW) {
+    count++;
+    Serial.print("计数: ");
+    Serial.println(count);
+    delay(50);  // 防抖
+  }
+  lastState = btnState;
+}`
+  },
+  {
+    icon: '🌐', name: 'WiFi连接',
+    desc: 'ESP32连接WiFi网络',
+    keywords: ['wifi','联网','网络','连接','上网','无线'],
+    code: `// ESP32 WiFi连接
+#include <WiFi.h>
+
+const char* ssid = "你的WiFi名";
+const char* password = "你的WiFi密码";
+
+void setup() {
+  Serial.begin(115200);
+  
+  WiFi.begin(ssid, password);
+  Serial.print("正在连接WiFi");
+  
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  
+  Serial.println();
+  Serial.println("WiFi已连接！");
+  Serial.print("IP地址: ");
+  Serial.println(WiFi.localIP());
+}
+
+void loop() {
+  // 你的主程序
+}`
+  },
 ];
 
+// 渲染模板卡片
 function renderTemplates() {
-  document.getElementById('template-grid').innerHTML = CODE_TEMPLATES.map(t => `
-    <div class="tpl-card" onclick="useTemplate('${t.name}')">
+  const grid = document.getElementById('template-grid');
+  grid.innerHTML = CODE_TEMPLATES.map(t => `
+    <div class="tpl-card" onclick="useTemplate('${t.name}')" title="${t.desc}">
       <div class="tpl-icon">${t.icon}</div>
       <div class="tpl-name">${t.name}</div>
       <div class="tpl-desc">${t.desc}</div>
@@ -691,209 +1243,533 @@ function renderTemplates() {
 }
 
 function useTemplate(name) {
-  const t = CODE_TEMPLATES.find(x => x.name === name);
-  if (t) {
-    currentGeneratedCode = t.code;
-    document.getElementById('generate-output').innerHTML = `<pre class="code-block">${highlightArduino(t.code)}</pre>`;
+  const tpl = CODE_TEMPLATES.find(t => t.name === name);
+  if (tpl) {
+    currentGeneratedCode = tpl.code;
+    document.getElementById('generate-output').innerHTML = `<pre class="code-block">${highlightArduino(tpl.code)}</pre>` + (typeof HW_DATA!=='undefined'&&HW_DATA[tpl.name]?showInlineHardware(tpl.name):'');
     document.getElementById('generate-actions').style.display = 'flex';
-    document.getElementById('generate-status').innerHTML = `<span class="success">✅ ${t.name} — ${t.desc}</span>`;
+    document.getElementById('generate-status').innerHTML = `<span class="success">✅ 已加载模板：<b>${tpl.name}</b> — ${tpl.desc}</span>`;
   }
 }
 
+// 关键词匹配生成代码
 function generateCode() {
   const idea = document.getElementById('generate-idea').value.trim();
-  if (!idea) { document.getElementById('generate-output').innerHTML = '<div class="welcome"><div class="icon">💡</div><p>描述想做的事情，或点模板</p></div>'; return; }
+  const output = document.getElementById('generate-output');
+  const status = document.getElementById('generate-status');
 
-  const lower = idea.toLowerCase();
-  let best = null, bestScore = 0;
-  for (const t of CODE_TEMPLATES) {
+  if (!idea) {
+    // 没输入就展示模板
+    output.innerHTML = '<span class="info">💡 请描述你想做什么，或直接点击下方的模板。例如："让LED闪烁"</span>';
+    return;
+  }
+
+  const ideaLower = idea.toLowerCase();
+  let bestMatch = null;
+  let bestScore = 0;
+
+  for (const tpl of CODE_TEMPLATES) {
     let score = 0;
-    for (const kw of t.keywords) { if (lower.includes(kw.toLowerCase())) score += 2; }
-    if (score > bestScore) { bestScore = score; best = t; }
+    for (const kw of tpl.keywords) {
+      if (ideaLower.includes(kw.toLowerCase())) score += 2;
+    }
+    // 额外匹配常见说法
+    const extraPatterns = {
+      'LED闪烁': ['闪','亮','灭','blink'],
+      '按钮控制LED': ['按','button','按下亮','按住'],
+      '串口打印': ['打印','输出','print','发送数据','显示在'],
+      '蜂鸣器发声': ['响','叫','发声','嘀','嘟','播放音乐','唱歌'],
+      '超声波测距': ['距离','多远','雷达','障碍物','避障'],
+      '舵机控制': ['舵','servo','摆','扫','转角度'],
+      '温度传感器': ['温度','气温','多少度','热','冷'],
+      '交通灯': ['红绿灯','红灯','绿灯','人行道'],
+      '电位器读数': ['旋钮','拧','调亮度','可调电阻'],
+      '计数器': ['计数','加','加一','累加','记录次数','第几次'],
+      'WiFi连接': ['wifi','联网','网络','连接网'],
+    };
+    const extras = extraPatterns[tpl.name] || [];
+    for (const ex of extras) {
+      if (ideaLower.includes(ex)) score += 1;
+    }
+
+    if (score > bestScore) {
+      bestScore = score;
+      bestMatch = tpl;
+    }
   }
 
-  if (best && bestScore >= 2) {
-    currentGeneratedCode = best.code;
-    document.getElementById('generate-output').innerHTML = `<pre class="code-block">${highlightArduino(best.code)}</pre>`;
-    document.getElementById('generate-status').innerHTML = `<span class="success">✅ ${best.name} — ${best.desc}</span>`;
+  if (bestMatch && bestScore >= 2) {
+    currentGeneratedCode = bestMatch.code;
+    output.innerHTML = `<pre class="code-block">${highlightArduino(bestMatch.code)}</pre>`;
+    status.innerHTML = `<span class="success">✅ 匹配到模板「<b>${bestMatch.name}</b>」— ${bestMatch.desc}</span>`;
   } else {
-    currentGeneratedCode = generateBasic(idea);
-    document.getElementById('generate-output').innerHTML = `<pre class="code-block">${highlightArduino(currentGeneratedCode)}</pre>`;
-    document.getElementById('generate-status').innerHTML = '<span class="warn">⚠️ 未精确匹配，以下是基础框架</span>';
+    // 没有精确匹配，生成基础框架
+    status.innerHTML = '<span class="warn">⚠️ 没有找到完全匹配的模板，以下是基础框架，请使用 AI 智能生成获取更准确的代码。</span>';
+    currentGeneratedCode = generateBasicFramework(idea);
+    output.innerHTML = `<pre class="code-block">${highlightArduino(currentGeneratedCode)}</pre>`;
   }
+
   document.getElementById('generate-actions').style.display = 'flex';
 }
 
-function generateBasic(idea) {
-  let c = '// 基础框架\n'; const l = idea.toLowerCase();
-  if (l.includes('led')||l.includes('灯')) c += 'const int led = 13;\n';
-  if (l.includes('按钮')||l.includes('button')) c += 'const int btn = 2;\n';
-  c += 'void setup() {\n  Serial.begin(115200);\n';
-  if (l.includes('led')||l.includes('灯')) c += '  pinMode(led, OUTPUT);\n';
-  if (l.includes('按钮')||l.includes('button')) c += '  pinMode(btn, INPUT_PULLUP);\n';
-  c += '}\n\nvoid loop() {\n  // TODO\n  delay(100);\n}';
-  return c;
+// 生成基础框架
+function generateBasicFramework(idea) {
+  let code = '// 根据你的描述生成的基础框架\n';
+  const lower = idea.toLowerCase();
+
+  if (lower.includes('led') || lower.includes('灯') || lower.includes('亮')) {
+    code += 'const int ledPin = 13;  // LED引脚\n\n';
+  }
+  if (lower.includes('按钮') || lower.includes('按键') || lower.includes('button')) {
+    code += 'const int btnPin = 2;   // 按钮引脚\n\n';
+  }
+
+  code += `void setup() {
+  // 初始化代码
+  Serial.begin(115200);\n`;
+
+  if (lower.includes('led') || lower.includes('灯')) code += '  pinMode(ledPin, OUTPUT);\n';
+  if (lower.includes('按钮') || lower.includes('button')) code += '  pinMode(btnPin, INPUT_PULLUP);\n';
+
+  code += `}
+
+void loop() {
+  // TODO: 在这里编写你的主程序逻辑
+  
+  delay(100);
+}`;
+  return code;
 }
 
 function highlightArduino(code) {
   let hl = escapeHtml(code);
-  hl = hl.replace(/(\/\/[^\n]*)/g,'<span class="hl-cmt">$1</span>');
-  hl = hl.replace(/"([^"]*)"/g,'<span class="hl-str">"$1"</span>');
-  hl = hl.replace(/(#\w+)/g,'<span class="hl-macro">$1</span>');
-  ['void','int','float','char','bool','byte','long','unsigned','const','return','if','else','for','while','true','false','HIGH','LOW'].forEach(kw=>{hl=hl.replace(new RegExp('\\b'+kw+'\\b','g'),`<span class="hl-kw">${kw}</span>`)});
-  ['setup','loop','pinMode','digitalWrite','digitalRead','analogWrite','analogRead','delay','Serial','begin','println','print','millis'].forEach(fn=>{hl=hl.replace(new RegExp('\\b'+fn+'\\b','g'),`<span class="hl-fn">${fn}</span>`)});
-  hl = hl.replace(/\b(\d+)\b/g,'<span class="hl-num">$1</span>');
+  // 注释
+  hl = hl.replace(/(\/\/[^\n]*)/g, '<span class="hl-cmt">$1</span>');
+  // 字符串
+  hl = hl.replace(/"([^"]*)"/g, '<span class="hl-str">"$1"</span>');
+  // 预处理
+  hl = hl.replace(/(#\w+)/g, '<span class="hl-macro">$1</span>');
+  hl = hl.replace(/(&lt;[^&]*&gt;)/g, '<span class="hl-str">$1</span>');
+  // 关键字
+  const kws = ['void','int','float','double','char','bool','byte','long','unsigned','const','static','return','if','else','for','while','do','switch','case','break','continue','true','false','HIGH','LOW','INPUT','OUTPUT','INPUT_PULLUP'];
+  for (const kw of kws) {
+    hl = hl.replace(new RegExp('\\b' + kw + '\\b', 'g'), `<span class="hl-kw">${kw}</span>`);
+  }
+  // 函数名
+  const fns = ['setup','loop','pinMode','digitalWrite','digitalRead','analogWrite','analogRead','delay','Serial','begin','println','print','millis','attach','write','read','tone','map','constrain'];
+  for (const fn of fns) {
+    hl = hl.replace(new RegExp('\\b' + fn + '\\b', 'g'), `<span class="hl-fn">${fn}</span>`);
+  }
+  // 数字
+  hl = hl.replace(/\b(\d+)\b/g, '<span class="hl-num">$1</span>');
   return hl;
 }
 
 function copyGeneratedCode() {
-  if (currentGeneratedCode) navigator.clipboard.writeText(currentGeneratedCode).then(()=>{
-    document.getElementById('generate-status').innerHTML='<span class="success">✅ 已复制！</span>';
-  });
+  if (currentGeneratedCode) {
+    navigator.clipboard.writeText(currentGeneratedCode).then(() => {
+      document.getElementById('generate-status').innerHTML = '<span class="success">✅ 已复制到剪贴板！可以粘贴到 Arduino IDE 了</span>';
+    });
+  }
 }
 
 function explainGeneratedCode() {
   if (currentGeneratedCode) {
     document.getElementById('explain-input').value = currentGeneratedCode;
-    switchTab('explain'); setTimeout(explainCode, 100);
+    switchTab('explain');
+    setTimeout(explainCode, 100);
   }
 }
 
-// ==================== AI 增强 ====================
-const PRESET_API = {
-  url: 'https://api.deepseek.com/v1/chat/completions',
-  key: 'sk-9b430b2f0cb0433ea52e02d8cefd9525',
-  model: 'deepseek-chat',
-};
+// ==================== AI 增强功能 ====================
 
 function getAPIConfig() {
   return {
-    url: (localStorage.getItem('ai_api_url') || '').trim(),
-    key: (localStorage.getItem('ai_api_key') || '').trim(),
+    url: (localStorage.getItem('ai_api_url') || 'https://api.deepseek.com/v1/chat/completions').trim(),
+    key: (localStorage.getItem('ai_api_key') || 'sk-470e45564dac420bbfa0e78b5093c444').trim(),
     model: (localStorage.getItem('ai_api_model') || 'deepseek-chat').trim(),
   };
 }
-function hasAPI() { const c=getAPIConfig(); return !!(c.url&&c.key); }
 
-function copyAndAskDouDou(text, label) {
-  const msg = `🐶 豆豆，帮我做${label}：\n\n${text}`;
-  navigator.clipboard.writeText(msg).then(()=>{}).catch(()=>{});
-}
-
-async function callAI(prompt, output, status) {
-  if (!hasAPI()) {
-    status.innerHTML = ''; output.innerHTML = '<div class="status-hint"><div style="font-size:28px;margin-bottom:6px;">📋</div><div style="color:var(--green);font-weight:700;margin-bottom:6px;">未配置API，内容已复制到剪贴板</div><div style="font-size:13px;color:var(--text2);">在聊天窗口粘贴发给豆豆即可</div></div>';
-    return { noAPI: true };
+async function callAI(prompt) {
+  const config = getAPIConfig();
+  if (!config.url || !config.key) {
+    return { error: '未配置 API。请点击下方的"AI增强设置"配置 API。\n\n也可以把代码发给我（豆豆）来帮你分析！' };
   }
+
   try {
-    const config = getAPIConfig();
     const resp = await fetch(config.url, {
       method: 'POST',
-      headers: {'Content-Type':'application/json','Authorization':`Bearer ${config.key}`},
-      body: JSON.stringify({model:config.model,messages:[
-        {role:'system',content:'你是ESP32/Arduino教学助手，面向小学生。用通俗中文解释，加比喻。回复简洁。'},
-        {role:'user',content:prompt}
-      ],temperature:0.3,max_tokens:2000}),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${config.key}`,
+      },
+      body: JSON.stringify({
+        model: config.model,
+        messages: [
+          { role: 'system', content: '你是ESP32/Arduino编程教学助手，面向10-14岁小学生。用通俗易懂的中文解释，多用比喻。回复简洁有条理。' },
+          { role: 'user', content: prompt },
+        ],
+        temperature: 0.3,
+        max_tokens: 2000,
+      }),
     });
     const data = await resp.json();
-    if (data.error) throw new Error(data.error.message||'API错误');
-    return { text: data.choices?.[0]?.message?.content || '（空）' };
-  } catch(e) { return { error: `请求失败: ${e.message}` }; }
+    if (data.error) return { error: `API错误: ${data.error.message || JSON.stringify(data.error)}` };
+    return { text: data.choices?.[0]?.message?.content || '（AI返回为空）' };
+  } catch(e) {
+    return { error: `请求失败: ${e.message}` };
+  }
 }
 
 async function explainWithAI() {
   const code = document.getElementById('explain-input').value.trim();
-  const out = document.getElementById('explain-output'), st = document.getElementById('explain-status');
-  if (!code) { out.innerHTML='<span class="warn">⚠️ 请先粘贴代码</span>'; return; }
-  st.innerHTML = '<span class="spinner"></span>AI分析中...';
-  const r = await callAI(`逐行解读这段Arduino代码，用通俗语言+比喻适合小学生：\n\n\`\`\`cpp\n${code}\n\`\`\``, out, st);
-  if (r.noAPI) return;
-  if (r.error) { st.innerHTML=''; out.innerHTML=`<div class="error">❌ ${escapeHtml(r.error)}</div>`; }
-  else { st.innerHTML='<span class="success">✅ 完成</span>'; out.innerHTML=`<div style="line-height:1.8;">${escapeHtml(r.text).replace(/\n/g,'<br>')}</div>`; }
+  const output = document.getElementById('explain-output');
+  const status = document.getElementById('explain-status');
+  if (!code) { output.innerHTML = '<span class="warn">⚠️ 请先粘贴代码</span>'; return; }
+
+  status.innerHTML = '<span class="spinner"></span>正在调用 AI 深度分析...';
+  const result = await callAI(`请逐行解读以下Arduino/ESP32代码，用通俗的语言解释每行在做什么，注意用比喻帮助小学生理解。同时指出代码的优点和可以改进的地方：\n\n\`\`\`cpp\n${code}\n\`\`\``);
+
+  if (result.error) {
+    status.innerHTML = '';
+    output.innerHTML = `<div class="error">❌ ${escapeHtml(result.error)}</div><div style="margin-top:8px;color:var(--text2)">你可以把代码发给我（豆豆），我来帮你分析！</div>`;
+  } else {
+    status.innerHTML = '<span class="success">✅ AI 分析完成</span>';
+    output.innerHTML = `<div style="font-size:16px; line-height:2;">${escapeHtml(result.text).replace(/\n/g, '<br>')}</div>`;
+  }
 }
 
 async function analyzeWithAI() {
-  const code = document.getElementById('debug-code').value.trim(), err = document.getElementById('debug-error').value.trim();
-  const out = document.getElementById('debug-output'), st = document.getElementById('debug-status');
-  if (!code&&!err) { out.innerHTML='<span class="warn">⚠️ 请粘贴代码或错误</span>'; return; }
-  st.innerHTML = '<span class="spinner"></span>AI分析中...';
-  let p = '分析Arduino/ESP32代码错误，面向小学生用通俗语言：';
-  if (code) p += `\n代码：\n\`\`\`\n${code}\n\`\`\``;
-  if (err) p += `\n编译器报错：\n${err}`;
-  p += '\n列出：1)错误位置 2)为什么错(比喻) 3)怎么改(给代码)';
-  const r = await callAI(p, out, st);
-  if (r.noAPI) return;
-  if (r.error) { st.innerHTML=''; out.innerHTML=`<div class="error">❌ ${escapeHtml(r.error)}</div>`; }
-  else { st.innerHTML='<span class="success">✅ 完成</span>'; out.innerHTML=`<div style="line-height:1.8;">${escapeHtml(r.text).replace(/\n/g,'<br>')}</div>`; }
+  const code = document.getElementById('debug-code').value.trim();
+  const errText = document.getElementById('debug-error').value.trim();
+  const output = document.getElementById('debug-output');
+  const status = document.getElementById('debug-status');
+
+  if (!code && !errText) { output.innerHTML = '<span class="warn">⚠️ 请粘贴代码或错误信息</span>'; return; }
+
+  status.innerHTML = '<span class="spinner"></span>正在调用 AI 深度分析...';
+  const prompt = ['请分析以下Arduino/ESP32代码中的错误，用通俗的语言解释错误原因和修复方法，面向小学生。'];
+
+  if (code) prompt.push(`代码：\n\`\`\`cpp\n${code}\n\`\`\``);
+  if (errText) prompt.push(`编译器错误信息：\n${errText}`);
+
+  prompt.push('\n请列出：1)每个错误的位置 2)为什么出错了（用比喻）3)怎么修复（给出修改后的代码片段）');
+
+  const result = await callAI(prompt.join('\n\n'));
+
+  if (result.error) {
+    status.innerHTML = '';
+    output.innerHTML = `<div class="error">❌ ${escapeHtml(result.error)}</div><div style="margin-top:8px;color:var(--text2)">你可以把代码发给我（豆豆），我来帮你分析！</div>`;
+  } else {
+    status.innerHTML = '<span class="success">✅ AI 分析完成</span>';
+    output.innerHTML = `<div style="font-size:16px; line-height:2;">${escapeHtml(result.text).replace(/\n/g, '<br>')}</div>`;
+  }
 }
 
 async function generateWithAI() {
   const idea = document.getElementById('generate-idea').value.trim();
-  const out = document.getElementById('generate-output'), st = document.getElementById('generate-status');
-  if (!idea) { out.innerHTML='<span class="warn">⚠️ 请描述</span>'; return; }
-  st.innerHTML = '<span class="spinner"></span>AI生成中...';
-  const r = await callAI(`根据描述生成完整Arduino/ESP32代码，适合小学生阅读，加中文注释：\n\n${idea}\n\n直接输出代码。`, out, st);
-  if (r.noAPI) return;
-  if (r.error) { st.innerHTML=''; out.innerHTML=`<div class="error">❌ ${escapeHtml(r.error)}</div>`; }
-  else {
-    st.innerHTML='<span class="success">✅ 完成</span>';
-    const m = r.text.match(/```(?:cpp|arduino)?\s*\n?([\s\S]*?)```/);
-    currentGeneratedCode = m ? m[1].trim() : r.text;
-    out.innerHTML = `<pre class="code-block">${highlightArduino(currentGeneratedCode)}</pre>`;
+  const output = document.getElementById('generate-output');
+  const status = document.getElementById('generate-status');
+
+  if (!idea) { output.innerHTML = '<span class="warn">⚠️ 请描述你想做什么</span>'; return; }
+
+  status.innerHTML = '<span class="spinner"></span>正在调用 AI 生成代码...';
+
+  const result = await callAI(`请根据以下描述，生成完整的Arduino/ESP32代码。代码要适合小学生阅读理解，加详细中文注释，包含setup()和loop()。如果涉及ESP32特定功能请用ESP32的写法。
+
+学生想实现的功能：${idea}
+
+请直接输出代码，先给一个简短的解释说明这段代码做了什么。`);
+
+  if (result.error) {
+    status.innerHTML = '';
+    output.innerHTML = `<div class="error">❌ ${escapeHtml(result.error)}</div><div style="margin-top:8px;color:var(--text2)">你可以把需求发给我（豆豆），我来帮你生成代码！</div>`;
+  } else {
+    status.innerHTML = '<span class="success">✅ AI 生成完成</span>';
+    const text = result.text;
+    // 提取代码块
+    const codeMatch = text.match(/```(?:cpp|arduino|ino)?\s*\n?([\s\S]*?)```/);
+    if (codeMatch) {
+      currentGeneratedCode = codeMatch[1].trim();
+      output.innerHTML = `<div style="margin-bottom:8px; color:var(--text2);">${escapeHtml(text.split('```')[0])}</div><pre class="code-block">${highlightArduino(currentGeneratedCode)}</pre>`;
+    } else {
+      currentGeneratedCode = text;
+      output.innerHTML = `<pre class="code-block">${highlightArduino(text)}</pre>`;
+    }
     document.getElementById('generate-actions').style.display = 'flex';
   }
 }
 
+// ==================== 编译纠错 ====================
+
+async function analyzeCompileWithAI() {
+  const code = document.getElementById('compile-code').value.trim();
+  const errText = document.getElementById('compile-error').value.trim();
+  const output = document.getElementById('compile-output');
+  const statusEl = document.getElementById('compile-status');
+
+  if (!code && !errText) {
+    output.innerHTML = '<span class="warn">⚠️ 请粘贴代码或编译报错信息</span>';
+    return;
+  }
+
+  statusEl.innerHTML = '<span class="spinner"></span>正在调用 AI 分析编译错误...';
+
+  const prompt = [`你是Arduino/ESP32编译错误分析专家，面向10-14岁小学生。请分析以下编译错误并给出修复建议。
+
+${code ? `代码：\n\`\`\`cpp\n${code}\n\`\`\`` : ''}
+${errText ? `编译器报错信息：\n${errText}` : ''}
+
+请按以下格式回答（用中文）：
+
+1️⃣ 错误定位
+指出具体哪一行有问题、是什么错误类型。
+
+2️⃣ 为什么出错（用比喻）
+用小学生能理解的比喻解释。比如"这就像你忘了写句号一样，编译器不知道这句话结束了"。
+
+3️⃣ 怎么修复
+给出修改后的正确代码片段。
+
+4️⃣ 防错小贴士
+以后怎么避免这类错误。
+
+注意常见编译错误类型：
+- expected ';' → 缺少分号
+- not declared in this scope → 变量/函数没定义就用了
+- does not name a type → 类型名写错了
+- undefined reference → 缺少库文件或函数实现
+- no matching function → 函数参数不对
+- exit status 1 → 编译失败（看上面的具体报错）`];
+
+  const result = await callAI(prompt.join('\n\n'));
+
+  if (result.error) {
+    statusEl.innerHTML = '';
+    output.innerHTML = `<div class="error">❌ ${escapeHtml(result.error)}</div><div style="margin-top:8px;color:var(--text2)">你可以把报错发给我（豆豆），我来帮你分析！</div>`;
+  } else {
+    statusEl.innerHTML = '<span class="success">✅ 编译错误分析完成</span>';
+    output.innerHTML = `<div style="font-size:16px; line-height:2;">${escapeHtml(result.text).replace(/\n/g, '<br>')}</div>`;
+  }
+}
+
+function loadCompileExample(n) {
+  const examples = {
+    1: {
+      code: `void setup() {\n  pinMode(LED_BUILTIN, OUTPUT)\n}\n\nvoid loop() {\n  digitalWrite(LED_BUILTIN, HIGH);\n  delay(1000);\n  digitalWrite(LED_BUILTIN, LOW);\n  delay(1000);\n}`,
+      error: `Arduino: 1.8.19 (Windows 10)\n\nsketch_jun09a:2:31: error: expected ';' before '}' token\n\n   pinMode(LED_BUILTIN, OUTPUT)\n                               ^\n\nexit status 1\nexpected ';' before '}' token`
+    },
+    2: {
+      code: `#include <Servo.h>\n\nServo myServo;\n\nvoid setup() {\n  myServo.attach(9);\n}\n\nvoid loop() {\n  int angle = sensorValue;\n  myServo.write(angle);\n  delay(15);\n}`,
+      error: `sketch_jun09a:9:15: error: 'sensorValue' was not declared in this scope\n\n   int angle = sensorValue;\n               ^~~~~~~~~~~\n\nexit status 1\n'sensorValue' was not declared in this scope`
+    },
+    3: {
+      code: `void setup() {\n  Serial.begin(9600);\n}\n\nvoid loop() {\n  int num = 10\n  Serial.printIn("Number: ");\n  Serial.println(num);\n  delay(500);\n}`,
+      error: `sketch_jun09a:7:13: error: expected ';' before 'Serial'\n\n   int num = 10\n             ^\nsketch_jun09a:8:9: error: 'class HardwareSerial' has no member named 'printIn'\n\nexit status 1`
+    }
+  };
+
+  const ex = examples[n];
+  if (ex) {
+    document.getElementById('compile-code').value = ex.code;
+    document.getElementById('compile-error').value = ex.error;
+    // 滚动到面板顶部
+    document.getElementById('compile-code').scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
+// ==================== 示例加载 ====================
+
+function loadExample(type) {
+  const examples = {
+    'blink': `// LED闪烁示例 - 经典入门程序
+void setup() {
+  pinMode(LED_BUILTIN, OUTPUT);
+  Serial.begin(115200);
+}
+
+void loop() {
+  digitalWrite(LED_BUILTIN, HIGH);
+  Serial.println("LED ON");
+  delay(1000);
+  digitalWrite(LED_BUILTIN, LOW);
+  Serial.println("LED OFF");
+  delay(1000);
+}`,
+    'sensor': `// 传感器读取示例
+const int sensorPin = A0;
+const int ledPin = 13;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(115200);
+}
+
+void loop() {
+  int sensorValue = analogRead(sensorPin);
+  Serial.print("传感器读数: ");
+  Serial.println(sensorValue);
+  
+  if (sensorValue > 500) {
+    digitalWrite(ledPin, HIGH);
+  } else {
+    digitalWrite(ledPin, LOW);
+  }
+  delay(200);
+}`
+  };
+  document.getElementById('explain-input').value = examples[type] || '';
+}
+
+function loadErrorExample(n) {
+  const examples = {
+    1: {
+      code: `void setup() {
+  pinMode(13, OUTPUT)
+  Serial.begin(115200)
+}
+
+void loop() {
+  digitalWrite(13, HIGH)
+  delay(1000)
+  digitalWrite(13, LOW)
+  delay(1000)
+}`,
+      error: `sketch.ino:3:1: error: expected ';' before 'Serial'
+sketch.ino:6:1: error: expected ';' before 'delay'
+sketch.ino:8:1: error: expected ';' before 'delay'`
+    }
+  };
+  const ex = examples[n] || examples[1];
+  document.getElementById('debug-code').value = ex.code;
+  document.getElementById('debug-error').value = ex.error;
+}
+
 // ==================== API 配置 ====================
-function toggleAPIConfig() { document.getElementById('api-config').classList.toggle('show'); }
+
+function toggleAPIConfig() {
+  document.getElementById('api-config').classList.toggle('show');
+}
+
 function saveAPIConfig() {
-  localStorage.setItem('ai_api_url', document.getElementById('api-url').value.trim());
-  localStorage.setItem('ai_api_key', document.getElementById('api-key').value.trim());
-  localStorage.setItem('ai_api_model', document.getElementById('api-model').value.trim());
-  alert('✅ 配置已保存');
+  const url = document.getElementById('api-url').value.trim();
+  const key = document.getElementById('api-key').value.trim();
+  const model = document.getElementById('api-model').value.trim();
+  localStorage.setItem('ai_api_url', url);
+  localStorage.setItem('ai_api_key', key);
+  localStorage.setItem('ai_api_model', model || 'deepseek-chat');
+  document.getElementById('api-status').textContent = '✅ 配置已保存';
+  setTimeout(() => document.getElementById('api-status').textContent = '', 3000);
 }
 
 // ==================== 速查手册 ====================
+
 function renderQuickRef() {
-  let h = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">';
-  for (const [fn,d] of Object.entries(ARDUINO_DOC)) {
-    h += `<div style="background:#1a2332;padding:10px;border-radius:8px;border-left:3px solid var(--accent2);font-size:12px;">
-      <b style="color:var(--accent2);">${fn}()</b>
-      <div style="color:#ccc;margin:2px 0;">${d.desc}</div>
-      <div style="color:var(--text2);font-size:11px;">${d.params}</div>
-      ${d.note?`<div style="color:var(--yellow);font-size:11px;">${d.note}</div>`:''}
-    </div>`;
+  let html = '';
+  html += '<div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">';
+
+  // 函数速查
+  for (const [fn, doc] of Object.entries(ARDUINO_DOC)) {
+    html += `<div style="background:#1a2332; padding:12px; border-radius:8px; border-left:3px solid var(--accent2);">`;
+    html += `<div style="font-weight:700; color:var(--accent2); font-size:16px;">${fn}()</div>`;
+    html += `<div style="color:#ccc; margin:4px 0;">${doc.desc}</div>`;
+    html += `<div style="font-size:13px; color:var(--text2);">参数: ${doc.params}</div>`;
+    if (doc.note) html += `<div style="font-size:13px; color:var(--yellow);">${doc.note}</div>`;
+    html += `</div>`;
   }
-  h += '</div><div style="margin-top:12px;"><b style="color:var(--accent2);">📐 结构速查</b></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px;">';
-  for (const [k,d] of Object.entries(ARDUINO_STRUCTURE)) {
-    h += `<div style="background:#1a1a2e;padding:8px;border-radius:8px;font-size:12px;"><b style="color:#d2a8ff;">${k}</b><br><span style="color:#aaa;">${d}</span></div>`;
+
+  // 类型速查
+  for (const [type, desc] of Object.entries(ARDUINO_TYPES)) {
+    html += `<div style="background:#1a2a1a; padding:12px; border-radius:8px; border-left:3px solid var(--green);">`;
+    html += `<div style="font-weight:700; color:var(--green); font-size:16px;">${type}</div>`;
+    html += `<div style="font-size:13px; color:#aaa; margin-top:4px;">${desc}</div>`;
+    html += `</div>`;
   }
-  h += '</div>';
-  document.getElementById('quickref-content').innerHTML = h;
+
+  html += '</div>';
+
+  // 结构速查
+  html += '<div style="margin-top:16px;"><b style="color:var(--accent2);">📐 程序结构速查</b></div>';
+  html += '<div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-top:8px;">';
+  for (const [kw, desc] of Object.entries(ARDUINO_STRUCTURE)) {
+    html += `<div style="background:#1a1a2e; padding:10px; border-radius:8px;">`;
+    html += `<b style="color:#d2a8ff;">${kw}</b><br><span style="font-size:13px; color:#aaa;">${desc}</span>`;
+    html += `</div>`;
+  }
+  html += '</div>';
+
+  document.getElementById('quickref-content').innerHTML = html;
 }
 
 // ==================== 初始化 ====================
 function init() {
   renderTemplates();
   renderQuickRef();
-  const url = localStorage.getItem('ai_api_url') || PRESET_API.url;
-  const key = localStorage.getItem('ai_api_key') || PRESET_API.key;
-  const model = localStorage.getItem('ai_api_model') || PRESET_API.model;
-  document.getElementById('api-url').value = url;
-  document.getElementById('api-key').value = key;
-  document.getElementById('api-model').value = model;
-  if (!localStorage.getItem('ai_api_url')) {
-    localStorage.setItem('ai_api_url', PRESET_API.url);
-    localStorage.setItem('ai_api_key', PRESET_API.key);
-    localStorage.setItem('ai_api_model', PRESET_API.model);
-  }
-  // 注册 Service Worker
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js').catch(() => {});
-  }
+  // 恢复 API 配置
+  const url = localStorage.getItem('ai_api_url');
+  const key = localStorage.getItem('ai_api_key');
+  const model = localStorage.getItem('ai_api_model');
+  document.getElementById('api-url').value = url || 'https://api.deepseek.com/v1/chat/completions';
+  if (key) document.getElementById('api-key').value = key || 'sk-470e45564dac420bbfa0e78b5093c444';
+  if (model) document.getElementById('api-model').value = model;
 }
 
 window.addEventListener('DOMContentLoaded', init);
+
+// ==================== 硬件接线图系统 ====================
+const SVG_W=660,SVG_H=320,SVG_BOARD_Y=15;
+var BOARD_PINS={};
+(function(){
+var b=BOARD_PINS;
+b['arduino-uno']={name:'Arduino Uno',voltage:'5V',display:'Arduino Uno',width:640,height:80,topRow:[{label:'D2',x:20,w:45},{label:'D3',x:70,w:45},{label:'D4',x:120,w:45},{label:'D5',x:170,w:45},{label:'D6',x:220,w:45},{label:'D7',x:270,w:45},{label:'D8',x:320,w:45},{label:'D9',x:370,w:45},{label:'D10',x:420,w:48},{label:'D11',x:470,w:48},{label:'D12',x:520,w:48},{label:'D13',x:570,w:48}],botRow:[{label:'GND',x:20,w:45},{label:'5V',x:70,w:45},{label:'A0',x:120,w:45},{label:'A1',x:170,w:45},{label:'A2',x:220,w:45},{label:'A3',x:270,w:45},{label:'A4',x:320,w:45},{label:'A5',x:370,w:45}]};
+b['arduino-nano']={name:'Arduino Nano',voltage:'5V',display:'Arduino Nano',width:640,height:70,topRow:[{label:'D2',x:20,w:45},{label:'D3',x:70,w:45},{label:'D4',x:120,w:45},{label:'D5',x:170,w:45},{label:'D6',x:220,w:45},{label:'D7',x:270,w:45},{label:'D8',x:320,w:45},{label:'D9',x:370,w:45},{label:'D10',x:420,w:48},{label:'D11',x:470,w:48},{label:'D12',x:520,w:48},{label:'D13',x:570,w:48}],botRow:[{label:'GND',x:20,w:45},{label:'5V',x:70,w:45},{label:'A0',x:120,w:45},{label:'A1',x:170,w:45},{label:'A2',x:220,w:45},{label:'A3',x:270,w:45},{label:'A4',x:320,w:45},{label:'A5',x:370,w:45},{label:'A6',x:420,w:48},{label:'A7',x:470,w:48}]};
+b['arduino-mega']={name:'Arduino Mega',voltage:'5V',display:'Arduino Mega 2560',width:640,height:80,topRow:[{label:'D22',x:20,w:45},{label:'D24',x:70,w:45},{label:'D26',x:120,w:45},{label:'D28',x:170,w:45},{label:'D30',x:220,w:45},{label:'D32',x:270,w:45},{label:'D34',x:320,w:45},{label:'D36',x:370,w:45},{label:'D38',x:420,w:48},{label:'D40',x:470,w:48},{label:'D42',x:520,w:48},{label:'D44',x:570,w:48}],botRow:[{label:'D23',x:20,w:45},{label:'D25',x:70,w:45},{label:'D27',x:120,w:45},{label:'D29',x:170,w:45},{label:'D31',x:220,w:45},{label:'D33',x:270,w:45},{label:'D35',x:320,w:45},{label:'D37',x:370,w:45},{label:'D39',x:420,w:48},{label:'D41',x:470,w:48},{label:'D43',x:520,w:48},{label:'D45',x:570,w:48}]};
+b['esp32-devkit']={name:'ESP32 DevKit',voltage:'3.3V',display:'ESP32 DevKit V1',width:640,height:80,topRow:[{label:'D2',x:20,w:45},{label:'D4',x:70,w:45},{label:'D5',x:120,w:45},{label:'D12',x:170,w:45},{label:'D13',x:220,w:45},{label:'D14',x:270,w:45},{label:'D15',x:320,w:45},{label:'D18',x:370,w:45},{label:'D19',x:420,w:48},{label:'D21',x:470,w:48},{label:'D22',x:520,w:48},{label:'D23',x:570,w:48}],botRow:[{label:'GND',x:20,w:45},{label:'3.3V',x:70,w:45},{label:'D25',x:120,w:45},{label:'D26',x:170,w:45},{label:'D27',x:220,w:45},{label:'D32',x:270,w:45},{label:'D33',x:320,w:45},{label:'D34',x:370,w:45},{label:'D35',x:420,w:48},{label:'D36',x:470,w:48},{label:'D39',x:520,w:48}]};
+b['esp8266-nodemcu']={name:'ESP8266 NodeMCU',voltage:'3.3V',display:'ESP8266 NodeMCU',width:640,height:80,topRow:[{label:'D0',x:20,w:45},{label:'D1',x:70,w:45},{label:'D2',x:120,w:45},{label:'D3',x:170,w:45},{label:'D4',x:220,w:45},{label:'D5',x:270,w:45},{label:'D6',x:320,w:45},{label:'D7',x:370,w:45},{label:'D8',x:420,w:48},{label:'D9',x:470,w:48},{label:'D10',x:520,w:48},{label:'GND',x:570,w:48}],botRow:[{label:'3.3V',x:20,w:45},{label:'5V',x:70,w:45},{label:'A0',x:120,w:45},{label:'RST',x:170,w:45},{label:'EN',x:220,w:45},{label:'GND',x:270,w:45},{label:'D0',x:320,w:45},{label:'SD3',x:370,w:45},{label:'SD2',x:420,w:48},{label:'SD1',x:470,w:48},{label:'CMD',x:520,w:48}]};
+// Legacy aliases
+b['arduino']=b['arduino-uno'];
+b['esp32']=b['esp32-devkit'];
+})();
+
+// ====== 开发板切换 ======
+var hwSelectedBoard = 'arduino-uno';
+function onHwBoardChange(){
+  hwSelectedBoard = document.getElementById('hw-board-select').value;
+  var board = BOARD_PINS[hwSelectedBoard];
+  if(!board) return;
+  var info = document.getElementById('hw-board-info');
+  info.innerHTML = '<b style="color:#00d2ff">'+(board.display||board.name)+'</b> | '+board.voltage+' | 数字脚:'+board.digital.length+'个 | 模拟脚:'+board.analog.length+'个';
+  // Re-render if a project is selected
+  if(window._lastHwProject) showHardware(window._lastHwProject);
+}
+setTimeout(function(){onHwBoardChange();},200);
+
+function findPinX(b,p){
+  // Map legacy names
+  if(b==='arduino')b='arduino-uno';
+  if(b==='esp32')b='esp32-devkit';
+  var a=BOARD_PINS[b]||BOARD_PINS.arduino;var all=[].concat(a.topRow,a.botRow);for(var i=0;i<all.length;i++)if(all[i].label===p)return all[i].x+all[i].w/2;if(a.specialPins[p])return a.specialPins[p][0].x+22;return 320;}
+function drawWire(x1,y1,x2,y2,c,lab){var m=(y1+y2)/2;var p='<path d="M'+x1+','+y1+' L'+x1+','+m+' L'+x2+','+m+' L'+x2+','+y2+'" fill="none" stroke="'+c+'" stroke-width="2" stroke-linecap="round"/>';if(lab)p+='<text x="'+((x1+x2)/2)+'" y="'+(m-5)+'" text-anchor="middle" fill="'+c+'" font-size="9" font-family="Consolas">'+lab+'</text>';return p;}
+function drawWiringDiagram(d,b){var bp=BOARD_PINS[b]||BOARD_PINS.arduino,bh=68;var s='<svg viewBox="0 0 '+SVG_W+' '+SVG_H+'" class="hw-diagram-svg" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="'+(SVG_W-4)+'" height="'+(SVG_H-4)+'" rx="10" fill="#0d1117" stroke="#1a3a3a" stroke-width="1"/>';s+='<text x="'+SVG_W/2+'" y="10" text-anchor="middle" fill="#8b949e" font-size="11">Wiring: '+(bp.display||bp.name)+'</text>';s+='<rect x="10" y="'+SVG_BOARD_Y+'" width="'+bp.width+'" height="'+bh+'" rx="8" fill="#1a2332" stroke="#0f3460" stroke-width="2"/>';s+='<text x="340" y="'+(SVG_BOARD_Y+14)+'" text-anchor="middle" fill="#e0e0e0" font-size="13" font-weight="700">'+bp.name+'</text>';for(var i=0;i<bp.topRow.length;i++){var p=bp.topRow[i],cx=20+p.x,cy=SVG_BOARD_Y+32,fill=p.label.indexOf('D')===0?'#1a3a5a':'#2a2a3a';s+='<rect x="'+cx+'" y="'+cy+'" width="'+(p.w-4)+'" height="18" rx="3" fill="'+fill+'" stroke="#3a5a7a" stroke-width="1"/>';s+='<text x="'+(cx+(p.w-4)/2)+'" y="'+(cy+13)+'" text-anchor="middle" fill="#00d2ff" font-size="10" font-family="Consolas">'+p.label+'</text>';}for(var i=0;i<bp.botRow.length;i++){var p=bp.botRow[i],cx=20+p.x,cy=SVG_BOARD_Y+54;var fc=p.label==='GND'?'#2a1a1a':(p.label==='5V'||p.label==='3.3V'?'#1a2a1a':'#2a2a3a');s+='<rect x="'+cx+'" y="'+cy+'" width="'+(p.w-4)+'" height="14" rx="2" fill="'+fc+'" stroke="#3a3a4a" stroke-width="1"/>';var tc=p.label==='GND'?'#ff6666':(p.label==='5V'||p.label==='3.3V'?'#66ff66':'#a0a0b0');s+='<text x="'+(cx+(p.w-4)/2)+'" y="'+(cy+10)+'" text-anchor="middle" fill="'+tc+'" font-size="9" font-family="Consolas">'+p.label+'</text>';}var cy=145;if(d==='led-blink'){var px=findPinX(b,'D13'),gx=findPinX(b,'GND');s+='<circle cx="280" cy="'+cy+'" r="15" fill="#ff333344" stroke="#ff5555" stroke-width="2"/><text x="280" y="'+(cy+4)+'" text-anchor="middle" fill="#ff8888" font-size="10">LED</text>';s+='<rect x="370" y="'+(cy-10)+'" width="40" height="20" rx="3" fill="none" stroke="#d4a373" stroke-width="2"/><text x="390" y="'+(cy+4)+'" text-anchor="middle" fill="#d4a373" font-size="9">220</text>';s+=drawWire(px,SVG_BOARD_Y+50,280,cy-15,'#00d2ff','D13')+drawWire(280,cy+15,370,cy-10,'#ccc','')+drawWire(370,cy+10,gx,SVG_BOARD_Y+60,'#ff6666','GND');}else if(d==='button-led'){var lx=findPinX(b,'D13'),bx=findPinX(b,'D2'),gx=findPinX(b,'GND');s+='<circle cx="250" cy="'+cy+'" r="15" fill="#ff333344" stroke="#ff5555" stroke-width="2"/><text x="250" y="'+(cy+4)+'" text-anchor="middle" fill="#ff8888" font-size="10">LED</text>';s+='<rect x="380" y="'+(cy-12)+'" width="40" height="24" rx="4" fill="#334" stroke="#ffd740" stroke-width="2"/><text x="400" y="'+(cy+5)+'" text-anchor="middle" fill="#ffd740" font-size="10">BTN</text>';s+=drawWire(lx,SVG_BOARD_Y+50,250,cy-15,'#00d2ff','D13')+drawWire(bx,SVG_BOARD_Y+50,400,cy-12,'#ffd740','D2')+drawWire(250,cy+15,gx,SVG_BOARD_Y+60,'#ff6666','GND')+drawWire(400,cy+12,gx,SVG_BOARD_Y+60,'#ff6666','GND');}else if(d==='buzzer'){var px=findPinX(b,'D8'),gx=findPinX(b,'GND');s+='<circle cx="330" cy="'+cy+'" r="20" fill="#2a2a3a" stroke="#ffa657" stroke-width="2"/><text x="330" y="'+(cy+5)+'" text-anchor="middle" fill="#ffa657" font-size="14">Buzzer</text>';s+=drawWire(px,SVG_BOARD_Y+50,330,cy-20,'#00d2ff','D8')+drawWire(gx,SVG_BOARD_Y+60,330,cy+20,'#ff6666','GND');}else if(d==='servo'){var sx=findPinX(b,'D9'),vx=findPinX(b,'5V'),gx=findPinX(b,'GND');s+='<rect x="280" y="'+(cy-25)+'" width="100" height="50" rx="8" fill="#2a2a3a" stroke="#ffa657" stroke-width="2"/><text x="330" y="'+(cy-2)+'" text-anchor="middle" fill="#ffa657" font-size="12" font-weight="700">SG90</text><text x="330" y="'+(cy+14)+'" text-anchor="middle" fill="#8b949e" font-size="9">Servo</text>';s+=drawWire(sx,SVG_BOARD_Y+50,290,cy-25,'#ffa657','Orange(D9)')+drawWire(vx,SVG_BOARD_Y+60,330,cy-25,'#66ff66','Red(5V)')+drawWire(gx,SVG_BOARD_Y+60,370,cy-25,'#ff6666','Brown(GND)');}else if(d==='ultrasonic'){var tx=findPinX(b,'D9'),ex=findPinX(b,'D10'),vx=findPinX(b,'5V'),gx=findPinX(b,'GND');s+='<rect x="250" y="'+(cy-25)+'" width="160" height="50" rx="6" fill="#1a2a3a" stroke="#00d2ff" stroke-width="2"/><text x="330" y="'+(cy-8)+'" text-anchor="middle" fill="#00d2ff" font-size="12" font-weight="700">HC-SR04</text><text x="330" y="'+(cy+10)+'" text-anchor="middle" fill="#8b949e" font-size="9">Ultrasonic</text>';s+=drawWire(vx,SVG_BOARD_Y+60,270,cy-25,'#66ff66','VCC')+drawWire(tx,SVG_BOARD_Y+50,310,cy-25,'#00d2ff','Trig')+drawWire(ex,SVG_BOARD_Y+50,350,cy-25,'#ffd740','Echo')+drawWire(gx,SVG_BOARD_Y+60,390,cy-25,'#ff6666','GND');}else if(d==='traffic'){var r=findPinX(b,'D11'),yl=findPinX(b,'D12'),g=findPinX(b,'D13'),gnd=findPinX(b,'GND');s+='<rect x="300" y="'+(cy-45)+'" width="60" height="95" rx="8" fill="#1a1a2e" stroke="#555" stroke-width="2"/>';s+='<circle cx="330" cy="'+(cy-22)+'" r="12" fill="#ff333344" stroke="#ff3333" stroke-width="2"/><circle cx="330" cy="'+(cy+6)+'" r="12" fill="#ffd74044" stroke="#ffd740" stroke-width="2"/><circle cx="330" cy="'+(cy+34)+'" r="12" fill="#7ee78744" stroke="#7ee787" stroke-width="2"/>';s+=drawWire(r,SVG_BOARD_Y+50,330,cy-22,'#ff3333','D11')+drawWire(yl,SVG_BOARD_Y+50,330,cy+6,'#ffd740','D12')+drawWire(g,SVG_BOARD_Y+50,330,cy+34,'#7ee787','D13')+drawWire(gnd,SVG_BOARD_Y+60,360,cy,'#ff6666','GND');}else{s+='<text x="330" y="'+cy+'" text-anchor="middle" fill="#8b949e" font-size="14">Table below</text>';}s+='</svg>';return s;}
+var HW_DATA={};
+(function(){var h=HW_DATA;
+h['LED闪烁']={components:[{name:'LED发光二极管',spec:'5mm',qty:1,note:'长脚正极(+)'},{name:'电阻',spec:'220Ω',qty:1,note:'限流保护'},{name:'面包板',spec:'830孔',qty:1},{name:'杜邦线',spec:'20cm',qty:3}],connections:[{c:'LED正极(+)',p:'长脚',b:'D13',t:'signal'},{c:'电阻',p:'接LED负极',b:'LED负极',t:'comp'},{c:'电阻',p:'另一端',b:'GND',t:'gnd'}],diagramType:'led-blink',board:'arduino'};
+h['按钮控制LED']={components:[{name:'LED',spec:'5mm',qty:1},{name:'按键',spec:'6x6mm',qty:1},{name:'220Ω电阻',qty:1},{name:'10kΩ电阻',qty:1},{name:'面包板',spec:'830孔',qty:1},{name:'杜邦线',spec:'20cm',qty:6}],connections:[{c:'LED正极',p:'→220Ω',b:'D13',t:'signal'},{c:'LED负极',p:'短脚',b:'GND',t:'gnd'},{c:'按键',p:'一端',b:'D2',t:'signal'},{c:'按键',p:'→10kΩ',b:'GND',t:'gnd'}],diagramType:'button-led',board:'arduino'};
+h['蜂鸣器发声']={components:[{name:'蜂鸣器',spec:'3-5V有源',qty:1},{name:'面包板',spec:'830孔',qty:1},{name:'杜邦线',spec:'20cm',qty:2}],connections:[{c:'蜂鸣器+',p:'长脚',b:'D8',t:'signal'},{c:'蜂鸣器-',p:'短脚',b:'GND',t:'gnd'}],diagramType:'buzzer',board:'arduino'};
+h['舵机控制']={components:[{name:'SG90舵机',spec:'1.5kg·cm',qty:1,note:'棕/红/橙'},{name:'外接电源',spec:'5V 1A',qty:1},{name:'杜邦线',spec:'20cm',qty:3}],connections:[{c:'棕色',p:'GND',b:'GND',t:'gnd'},{c:'红色',p:'5V',b:'5V',t:'vcc'},{c:'橙色',p:'信号',b:'D9',t:'signal'}],diagramType:'servo',board:'arduino'};
+h['超声波测距']={components:[{name:'HC-SR04',spec:'2-400cm',qty:1},{name:'面包板',spec:'830孔',qty:1},{name:'杜邦线',spec:'20cm',qty:4}],connections:[{c:'VCC',p:'VCC',b:'5V',t:'vcc'},{c:'Trig',p:'Trig',b:'D9',t:'signal'},{c:'Echo',p:'Echo',b:'D10',t:'signal'},{c:'GND',p:'GND',b:'GND',t:'gnd'}],diagramType:'ultrasonic',board:'arduino'};
+h['交通灯']={components:[{name:'红LED',spec:'5mm',qty:1},{name:'黄LED',spec:'5mm',qty:1},{name:'绿LED',spec:'5mm',qty:1},{name:'220Ω电阻',qty:3},{name:'面包板',spec:'830孔',qty:1},{name:'杜邦线',spec:'20cm',qty:6}],connections:[{c:'红LED→220',p:'正极',b:'D11',t:'signal'},{c:'黄LED→220',p:'正极',b:'D12',t:'signal'},{c:'绿LED→220',p:'正极',b:'D13',t:'signal'},{c:'所有负极',p:'共接',b:'GND',t:'gnd'}],diagramType:'traffic',board:'arduino'};
+h['电位器读数']={components:[{name:'电位器',spec:'10kΩ B型',qty:1},{name:'LED',spec:'5mm',qty:1},{name:'220Ω电阻',qty:1},{name:'面包板',spec:'830孔',qty:1},{name:'杜邦线',spec:'20cm',qty:6}],connections:[{c:'电位器左',p:'5V',b:'5V',t:'vcc'},{c:'电位器中',p:'信号',b:'A0',t:'signal'},{c:'电位器右',p:'GND',b:'GND',t:'gnd'},{c:'LED→220',p:'正极',b:'D9',t:'signal'},{c:'LED负极',p:'',b:'GND',t:'gnd'}],diagramType:'led-blink',board:'arduino'};
+h['计数器']={components:[{name:'按键',spec:'6x6mm',qty:1},{name:'10kΩ电阻',qty:1},{name:'面包板',spec:'830孔',qty:1},{name:'杜邦线',spec:'20cm',qty:3}],connections:[{c:'按键',p:'一端→D2',b:'D2',t:'signal'},{c:'按键/10k',p:'→GND',b:'GND',t:'gnd'}],diagramType:'button-led',board:'arduino'};
+h['RGB灯带']={components:[{name:'WS2812B',spec:'5V可寻址',qty:1,note:'3线'},{name:'电容',spec:'1000μF',qty:1},{name:'330Ω电阻',qty:1},{name:'5V电源',spec:'2A+',qty:1,note:'必须外接!'},{name:'杜邦线',spec:'20cm',qty:3}],connections:[{c:'5V',p:'红线',b:'外接5V',t:'vcc'},{c:'DIN',p:'绿线→330Ω',b:'D6',t:'signal'},{c:'GND',p:'白线',b:'GND(共地!)',t:'gnd'}],diagramType:'servo',board:'arduino'};
+})();
+function renderHardwareTemplates(){var g=document.getElementById('hw-template-grid');if(!g)return;var n=Object.keys(HW_DATA);g.innerHTML=n.map(function(k){return '<div class="tpl-card" onclick="showHardware(\''+k+'\')" style="cursor:pointer"><div class="tpl-name">'+k+'</div></div>';}).join('');}
+function showHardware(t){
+  window._lastHwProject = t;
+  var h=HW_DATA[t];if(!h)return;var b='<table class="hw-bom-table"><thead><tr><th>#</th><th>元器件</th><th>规格</th><th>数量</th><th>备注</th></tr></thead><tbody>';h.components.forEach(function(c,i){b+='<tr><td>'+(i+1)+'</td><td>'+c.name+'</td><td>'+c.spec+'</td><td>x'+c.qty+'</td><td>'+(c.note||'')+'</td></tr>';});b+='</tbody></table>';document.getElementById('hw-bom').innerHTML=b;var cn='<table class="hw-conn-table"><thead><tr><th>元器件</th><th>元件引脚</th><th>开发板引脚</th></tr></thead><tbody>';h.connections.forEach(function(c){var cls='pin-chip';if(c.t==='gnd')cls='pin-gnd';else if(c.t==='vcc')cls='pin-vcc';var bp=(c.t==='comp')?c.b:'<span class="'+cls+'">'+c.b+'</span>';cn+='<tr><td>'+c.c+'</td><td>'+c.p+'</td><td>'+bp+'</td></tr>';});cn+='</tbody></table>';document.getElementById('hw-connections').innerHTML=cn;document.getElementById('hw-diagram').innerHTML=drawWiringDiagram(h.diagramType,h.board);}
+function showInlineHardware(t){var h=HW_DATA[t];if(!h)return'';var ht='<div class="inline-hw"><div class="inline-hw-header" onclick="this.nextElementSibling.classList.toggle(\'show\')"><span>📋 查看硬件接线</span><span style="font-size:12px;color:#8b949e">点击展开▼</span></div><div class="inline-hw-body">';ht+='<b>元器件:</b><table class="hw-bom-table"><thead><tr><th>元器件</th><th>规格</th><th>数量</th><th>备注</th></tr></thead><tbody>';h.components.forEach(function(c){ht+='<tr><td>'+c.name+'</td><td>'+c.spec+'</td><td>x'+c.qty+'</td><td>'+(c.note||'')+'</td></tr>';});ht+='</tbody></table><br><b>接线:</b><table class="hw-conn-table"><thead><tr><th>元器件</th><th>引脚</th><th>开发板</th></tr></thead><tbody>';h.connections.forEach(function(c){var cls='pin-chip';if(c.t==='gnd')cls='pin-gnd';else if(c.t==='vcc')cls='pin-vcc';var bp=(c.t==='comp')?c.b:'<span class="'+cls+'">'+c.b+'</span>';ht+='<tr><td>'+c.c+'</td><td>'+c.p+'</td><td>'+bp+'</td></tr>';});ht+='</tbody></table><br><b>示意图:</b>'+drawWiringDiagram(h.diagramType,h.board)+'</div></div>';return ht;}
+setTimeout(function(){renderHardwareTemplates();},100);
 </script>
 
 </body>
